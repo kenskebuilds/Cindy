@@ -35,6 +35,14 @@
   .panel { display:flex; flex-direction:column; gap:3.25rem; }
   body.js .panel[hidden] { display:none; }
   .panel > section:first-of-type .sec-head { border-top:0; padding-top:0; }
+  /* Let the workout tables break out past the reading column on wide screens.
+     Prose stays at a readable measure; only the tables go wide. Below ~1200px
+     they fall back to scrolling inside .scroller, exactly as on mobile. */
+  #routine .scroller { width:min(94vw, 1320px); margin-left:50%; transform:translateX(-50%); }
+  #routine table { min-width:1120px; }
+  #routine .c-why { min-width:17rem; }
+  #routine .c-cue { min-width:14rem; }
+  @media (max-width:64rem) { #routine .scroller { width:auto; margin-left:0; transform:none; } }
   .ev-toggle { margin-left:auto; color:var(--ink-3); border-bottom-color:transparent; }
   .ev-toggle::before { content:"+"; margin-right:.4rem; }
   .ev-toggle[aria-pressed="true"] { color:var(--accent); }
@@ -755,7 +763,7 @@
 <script>
 (function () {
   var b = document.body; b.classList.add('js');
-  var tabs = [].slice.call(document.querySelectorAll('.tab'));
+  var tabs = [].slice.call(document.querySelectorAll('.tab[data-tab]'));
   var panels = [].slice.call(document.querySelectorAll('.panel'));
   function show(slug, push) {
     if (!document.getElementById(slug)) slug = tabs[0].dataset.tab;
@@ -774,11 +782,23 @@
 
   var ev = document.getElementById('ev-toggle');
   var boxes = [].slice.call(document.querySelectorAll('details.evidence'));
-  ev.addEventListener('click', function () {
+  ev.addEventListener('click', function (e) {
+    e.preventDefault();
     var open = ev.getAttribute('aria-pressed') !== 'true';
+    // Hold scroll position. Anchor to the section you are currently reading —
+    // sections are stable containers, unlike anything inside a box that is
+    // itself expanding.
+    var blocks = [].slice.call(
+      document.querySelectorAll('.panel:not([hidden]) > section > *'));
+    var anchor = null, before = 0;
+    blocks.forEach(function (el) {
+      var top = el.getBoundingClientRect().top;
+      if (top <= 120) { anchor = el; before = top; }
+    });
     boxes.forEach(function (d) { d.open = open; });
     ev.setAttribute('aria-pressed', open);
     ev.textContent = open ? 'Hide evidence' : 'Show evidence';
+    if (anchor) { window.scrollBy(0, anchor.getBoundingClientRect().top - before); }
   });
 })();
 </script>
