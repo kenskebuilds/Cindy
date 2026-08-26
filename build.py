@@ -74,6 +74,8 @@ nav = [u'  <nav class="tabs" aria-label="Sections">']
 for slug, label, blurb, _ in TABS:
     nav.append(u'    <button type="button" class="tab" data-tab="%s" '
                u'aria-selected="false" title="%s">%s</button>' % (slug, blurb, label))
+nav.append(u'    <button type="button" id="ev-toggle" class="tab ev-toggle" '
+           u'aria-pressed="false">Show evidence</button>')
 nav.append(u'  </nav>')
 nav = u'\n'.join(nav) + u'\n'
 
@@ -106,7 +108,12 @@ TAB_CSS = u"""
   .panel { display:flex; flex-direction:column; gap:3.25rem; }
   body.js .panel[hidden] { display:none; }
   .panel > section:first-of-type .sec-head { border-top:0; padding-top:0; }
-  @media (max-width:40rem) { .tab { padding:.85rem .6rem; font-size:.65rem; } }
+  .ev-toggle { margin-left:auto; color:var(--ink-3); border-bottom-color:transparent; }
+  .ev-toggle::before { content:"+"; margin-right:.4rem; }
+  .ev-toggle[aria-pressed="true"] { color:var(--accent); }
+  .ev-toggle[aria-pressed="true"]::before { content:"\\2013"; }
+  @media (max-width:40rem) { .tab { padding:.85rem .6rem; font-size:.65rem; }
+    .ev-toggle { margin-left:.5rem; } }
 """
 
 TAB_JS = u"""
@@ -129,6 +136,15 @@ TAB_JS = u"""
   });
   window.addEventListener('popstate', function () { show(location.hash.slice(1), false); });
   show(location.hash.slice(1) || tabs[0].dataset.tab, false);
+
+  var ev = document.getElementById('ev-toggle');
+  var boxes = [].slice.call(document.querySelectorAll('details.evidence'));
+  ev.addEventListener('click', function () {
+    var open = ev.getAttribute('aria-pressed') !== 'true';
+    boxes.forEach(function (d) { d.open = open; });
+    ev.setAttribute('aria-pressed', open);
+    ev.textContent = open ? 'Hide evidence' : 'Show evidence';
+  });
 })();
 </script>
 """
