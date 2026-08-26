@@ -42,6 +42,97 @@ TONED = [
 for old, new in TONED:
     head_bits = head_bits.replace(old, new)
 
+# ---------------------------------------------------------------- tabs ----
+# Group the sections into four tabs. The plan lands first; everything that
+# explains or audits it sits behind the nav.
+TABS = [
+    (u'plan',      u'The Plan',   u'Warm-up, the seven days, weekly volume',
+     [u'rule', u'warmup', u'routine', u'weekly']),
+    (u'reasoning', u'Reasoning',  u'Why each exercise is in, and what turned out not to matter',
+     [u'selection', u'axial', u'settled']),
+    (u'fuel',      u'Fuel',       u'Calories, protein, cardio for fat loss',
+     [u'fatloss', u'nutrition']),
+    (u'record',    u'Record',     u'How to know it worked, and what changed',
+     [u'verify', u'corrections', u'ledger']),
+]
+
+masthead = re.search(r'  <header class="masthead">.*?\n  </header>\n', body, re.S).group(0)
+footer   = re.search(r'  <footer>.*?</footer>\n', body, re.S).group(0)
+
+sections = {}
+for m in re.finditer(r'  <section id="([a-z]+)">.*?\n  </section>\n', body, re.S):
+    sections[m.group(1)] = m.group(0)
+
+missing = [i for _, _, _, ids in TABS for i in ids if i not in sections]
+if missing:
+    raise SystemExit("build: sections not found: %s" % missing)
+orphans = [k for k in sections if k not in [i for _, _, _, ids in TABS for i in ids]]
+if orphans:
+    raise SystemExit("build: sections not assigned to any tab: %s" % orphans)
+
+nav = [u'  <nav class="tabs" aria-label="Sections">']
+for slug, label, blurb, _ in TABS:
+    nav.append(u'    <button type="button" class="tab" data-tab="%s" '
+               u'aria-selected="false" title="%s">%s</button>' % (slug, blurb, label))
+nav.append(u'  </nav>')
+nav = u'\n'.join(nav) + u'\n'
+
+panels = []
+for slug, label, blurb, ids in TABS:
+    panels.append(u'  <div class="panel" id="%s" role="region" aria-label="%s">' % (slug, label))
+    panels.append(u'    <p class="panel-blurb">%s</p>' % blurb)
+    panels.extend(sections[i].rstrip(u'\n') for i in ids)
+    panels.append(u'  </div>')
+panels = u'\n'.join(panels) + u'\n'
+
+body = u'<div class="wrap">\n' + masthead + nav + panels + footer + u'</div>\n'
+
+TAB_CSS = u"""
+  .tabs { position:sticky; top:0; z-index:20; display:flex; gap:.15rem;
+    margin:0 calc(var(--pad) * -1); padding:0 var(--pad);
+    background:color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--rule-strong);
+    overflow-x:auto; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { appearance:none; background:none; border:0; border-bottom:2px solid transparent;
+    font-family:var(--f-mono); font-size:.7rem; font-weight:600; letter-spacing:.11em;
+    text-transform:uppercase; color:var(--ink-3); cursor:pointer;
+    padding:.95rem .85rem; white-space:nowrap; transition:color .12s, border-color .12s; }
+  .tab:hover { color:var(--ink-2); }
+  .tab[aria-selected="true"] { color:var(--accent); border-bottom-color:var(--accent); }
+  .panel-blurb { font-family:var(--f-mono); font-size:.7rem; letter-spacing:.02em;
+    color:var(--ink-3); margin:0; }
+  .panel { display:flex; flex-direction:column; gap:3.25rem; }
+  body.js .panel[hidden] { display:none; }
+  .panel > section:first-of-type .sec-head { border-top:0; padding-top:0; }
+  @media (max-width:40rem) { .tab { padding:.85rem .6rem; font-size:.65rem; } }
+"""
+
+TAB_JS = u"""
+<script>
+(function () {
+  var b = document.body; b.classList.add('js');
+  var tabs = [].slice.call(document.querySelectorAll('.tab'));
+  var panels = [].slice.call(document.querySelectorAll('.panel'));
+  function show(slug, push) {
+    if (!document.getElementById(slug)) slug = tabs[0].dataset.tab;
+    panels.forEach(function (p) { p.hidden = (p.id !== slug); });
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === slug); });
+    if (push && location.hash.slice(1) !== slug) history.pushState(null, '', '#' + slug);
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      show(t.dataset.tab, true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  window.addEventListener('popstate', function () { show(location.hash.slice(1), false); });
+  show(location.hash.slice(1) || tabs[0].dataset.tab, false);
+})();
+</script>
+"""
+
 RESET = u"""
   *,*::before,*::after{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -68,7 +159,7 @@ page = u"""<!doctype html>
 <link rel="icon" href="%s">
 <link rel="apple-touch-icon" href="%s">
 <title>%s</title>
-<style>%s</style>
+<style>%s%s</style>
 %s
 </head>
 <body>
@@ -76,7 +167,7 @@ page = u"""<!doctype html>
 <p style="max-width:62rem;margin:0 auto;padding:0 clamp(1.1rem,4vw,2.75rem) 3rem;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.7rem;color:var(--ink-3)">Last built %s</p>
 </body>
 </html>
-""" % (FAVICON, FAVICON, title, RESET, head_bits.strip(), body.rstrip(), stamp)
+""" % (FAVICON, FAVICON, title, RESET, TAB_CSS, head_bits.strip(), body.rstrip(), stamp + TAB_JS)
 
 if not os.path.isdir(OUT):
     os.makedirs(OUT)

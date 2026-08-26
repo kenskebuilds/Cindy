@@ -16,6 +16,26 @@
   body{margin:0}
   img,svg,video{max-width:100%;height:auto}
   table{border-collapse:collapse}
+
+  .tabs { position:sticky; top:0; z-index:20; display:flex; gap:.15rem;
+    margin:0 calc(var(--pad) * -1); padding:0 var(--pad);
+    background:color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--rule-strong);
+    overflow-x:auto; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { appearance:none; background:none; border:0; border-bottom:2px solid transparent;
+    font-family:var(--f-mono); font-size:.7rem; font-weight:600; letter-spacing:.11em;
+    text-transform:uppercase; color:var(--ink-3); cursor:pointer;
+    padding:.95rem .85rem; white-space:nowrap; transition:color .12s, border-color .12s; }
+  .tab:hover { color:var(--ink-2); }
+  .tab[aria-selected="true"] { color:var(--accent); border-bottom-color:var(--accent); }
+  .panel-blurb { font-family:var(--f-mono); font-size:.7rem; letter-spacing:.02em;
+    color:var(--ink-3); margin:0; }
+  .panel { display:flex; flex-direction:column; gap:3.25rem; }
+  body.js .panel[hidden] { display:none; }
+  .panel > section:first-of-type .sec-head { border-top:0; padding-top:0; }
+  @media (max-width:40rem) { .tab { padding:.85rem .6rem; font-size:.65rem; } }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,7 +156,6 @@
 </head>
 <body>
 <div class="wrap">
-
   <header class="masthead">
     <p class="eyebrow">Revision 4 · Fat-Loss Phase · Age 40</p>
     <h1>The Zero-Waste Protocol</h1>
@@ -151,7 +170,14 @@
       <span>Volume <b>hold, don't cut</b></span>
     </div>
   </header>
-
+  <nav class="tabs" aria-label="Sections">
+    <button type="button" class="tab" data-tab="plan" aria-selected="false" title="Warm-up, the seven days, weekly volume">The Plan</button>
+    <button type="button" class="tab" data-tab="reasoning" aria-selected="false" title="Why each exercise is in, and what turned out not to matter">Reasoning</button>
+    <button type="button" class="tab" data-tab="fuel" aria-selected="false" title="Calories, protein, cardio for fat loss">Fuel</button>
+    <button type="button" class="tab" data-tab="record" aria-selected="false" title="How to know it worked, and what changed">Record</button>
+  </nav>
+  <div class="panel" id="plan" role="region" aria-label="The Plan">
+    <p class="panel-blurb">Warm-up, the seven days, weekly volume</p>
   <section id="rule">
     <div class="sec-head">
       <span class="sec-num">The one rule</span>
@@ -163,209 +189,6 @@
       <p>Which is worth saying plainly, because most of what you asked about turned out not to matter. The research below is organised so the things that <em>do</em> matter come first, and the settled questions are collapsed into a single block you can stop thinking about.</p>
     </div>
   </section>
-
-  <section id="settled">
-    <div class="sec-head">
-      <span class="sec-num">01 — Settled</span>
-      <h2>Six questions you can stop asking</h2>
-    </div>
-    <div class="col">
-      <p>Each of these was tested properly and came back null. Note the pattern: <strong>the strongest study in this batch is a negative result whose authors predicted the opposite.</strong></p>
-    </div>
-    <div class="settled">
-      <div class="settled-item">
-        <span class="settled-a">No difference</span>
-        <span class="settled-q">Pulldown grip width &amp; orientation</span>
-        <p class="settled-why">Buonsenso (2025), <strong>40 trained men, seven variants</strong> — no significant difference in lat activation across any grip type, width or trunk angle. Andersen (2014) and Lusk (2010) agree. "Wide grip for lats" outlived its evidence.</p>
-      </div>
-      <div class="settled-item">
-        <span class="settled-a">No difference</span>
-        <span class="settled-q">Iso-lateral vs bilateral</span>
-        <p class="settled-why">Kassiano (2025, <em>Sports Medicine</em>, 9-study meta-analysis): <strong>no hypertrophy difference</strong> (ES −0.21). Strength follows test specificity. Choose iso-lateral for bracing and side-to-side balance, not growth.</p>
-      </div>
-      <div class="settled-item">
-        <span class="settled-a">No difference</span>
-        <span class="settled-q">Lateral raise: cable vs dumbbell vs machine</span>
-        <p class="settled-why">Larsen (2025, <em>Front Physiol</em>), 24 trained, within-subject, ROM-matched. The authors <strong>hypothesised cables would win</strong> and got moderate-to-extreme Bayesian support for the null. Delt thickness rose 3.3–4.6% either way.</p>
-      </div>
-      <div class="settled-item">
-        <span class="settled-a">No difference</span>
-        <span class="settled-q">Machine vs free weight</span>
-        <p class="settled-why">Haugen (2023), <strong>13 studies, n=1,016</strong> — equal for hypertrophy, dynamic strength, isometric strength and jump. Only strength <em>testing</em> is modality-specific, and you have no free-weight test to be specific to.</p>
-      </div>
-      <div class="settled-item">
-        <span class="settled-a">No difference</span>
-        <span class="settled-q">Exercise order</span>
-        <p class="settled-why">Nunes (2021, <em>Eur J Sport Sci</em>, 11-study meta-analysis): <strong>no effect of order on hypertrophy.</strong> Strength gains favour whatever sits first. And <strong>"back before chest" has no evidence base at all</strong> — it traces to gym-floor copy.</p>
-      </div>
-      <div class="settled-item">
-        <span class="settled-a">No difference</span>
-        <span class="settled-q">Where the fly's resistance peaks</span>
-        <p class="settled-why">The one direct test of ascending versus descending resistance profile in a chest fly found <strong>~18% vs ~20% pec growth, not significantly different.</strong> Selecting exercises by resistance curve is currently an aesthetic preference, not a method.</p>
-      </div>
-    </div>
-    <div class="note"><strong>A caveat that limits all six.</strong> Most of these null findings come from untrained subjects, who grow from almost anything — which makes "no difference" weaker evidence than it looks for a trained 40-year-old. The genuinely trained-subject evidence here is about five studies deep. Treat these as "stop optimising," not as proven equivalence.</div>
-  </section>
-
-  <section id="selection">
-    <div class="sec-head">
-      <span class="sec-num">02 — Exercise selection</span>
-      <h2>The three that actually change something</h2>
-    </div>
-
-    <h3>Day 6 does not need a biceps exercise</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>Two findings that look contradictory but aren't. <strong>Mannarino (2021, <em>JSCR</em>, contralateral design)</strong> found elbow flexor hypertrophy of <strong>+11.1% from a biceps curl versus +5.2% from a dumbbell row</strong> — so direct curls genuinely earn their place, and "compounds are enough for arms" is wrong. But <strong>de França (2015, <em>Appl Physiol Nutr Metab</em>, trained men)</strong> found that adding isolation <em>on top of</em> a program that already has it produces no additional size or strength. Gentil (2013) and Bezerra (2018) agree. And the study most often cited on this — Rogers (2000), showing +6.6% vs +6.5% arm circumference — is <strong>a conference abstract that never became a paper, measuring with a tape</strong>. It should carry almost no weight.</p>
-      <p class="app"><span class="lab">Practical application</span>Keep both curls on Day 1. <strong>Add nothing to Day 6.</strong> Under fractional counting your biceps already receive 8–12 weekly sets from the pulling before any curl. In a deficit, an unspent recovery slot is not a wasted one.</p>
-    </div>
-
-    <h3>The Super Incline Press is a shoulder press</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span><strong>Rodríguez-Ridao (2020, <em>IJERPH</em>, 30 trained subjects, five bench angles)</strong> found upper (clavicular) pec activation <strong>peaks at 30°</strong>, with anterior deltoid climbing steadily as the bench gets steeper and mid/lower pec output falling. Lauver (2016) agrees on 30–45°. On the hypertrophy side, Chaves (2020, 8 weeks, sets equated) found upper-pec thickness increased most in the incline-only group — though in untrained subjects at once weekly. <strong>No evidence supports 60–70° for chest.</strong> The manufacturer's own copy says the machine "closely mimics the mechanics of a front military press."</p>
-      <p class="app"><span class="lab">Practical application</span>Keep the incline at <strong>~30°, 45° at the outside.</strong> Above that you are buying anterior deltoid you already train and paying for it in pec stimulus. If you want a shoulder press, program a shoulder press — you already have one on Day 6.</p>
-    </div>
-
-    <h3>Keep the lat pulldown — and it's the better choice for you specifically</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>First, the honest part: <strong>no hypertrophy trial comparing pulldown to pull-up exists.</strong> Anyone calling the pulldown "one of the best vertical pulls" is extrapolating from acute EMG, which <strong>Vigotsky (2018, 2022, <em>Sports Medicine</em>) shows is not a validated predictor of hypertrophy.</strong> What does exist: Doma (2013, <em>Sports Biomechanics</em>) found <strong>no difference in latissimus activation</strong> between chin-up and pulldown — but chin-ups produced greater biceps <em>and greater erector spinae</em> activity. The only variant with real support to avoid is behind-the-neck (Sperandei 2009).</p>
-      <p class="app"><span class="lab">Practical application</span>Keep it, and keep it for the right reason: it is the <em>better</em> option given your complaint, not a compromise. Doma's erector finding is the one result that maps directly onto your problem. <strong>This also means the Day 6 pull-up is working against you</strong> — it's been swapped for a second pulldown variation below. If pull-ups have never aggravated your back, put them back; you're the evidence that matters on that one.</p>
-    </div>
-
-    <h3>Setting up the pulldown — the seven-second checklist</h3>
-    <div class="col">
-      <p>You asked for setup instructions rather than a single cue, and that's the right instinct: on this movement the setup <em>is</em> the technique. Run this before every set, not just the first.</p>
-    </div>
-    <ol class="col">
-      <li><strong>Thigh pad tight — no daylight.</strong> If your hips can lift even slightly, the load pulls you up and your erectors spend the set fighting it. This is the single biggest contributor to your soreness.</li>
-      <li><strong>Chest on the pad before rep one, and it stays there.</strong> The set ends when the chest leaves it, regardless of how many reps you had planned.</li>
-      <li><strong>Exhale fully and let the ribs drop.</strong> This kills the arch before it can start. Do it once, at the top, before you pull.</li>
-      <li><strong>Set the trunk angle once — about 10–15° back — and never change it.</strong> Every degree of rep-to-rep drift is erector work you didn't want to buy.</li>
-      <li><strong>Brace light, around 10–15%.</strong> Maximal bracing here adds spinal compression to buy stability you don't need.</li>
-      <li><strong>The mental model: drive the elbow down toward your back pocket.</strong> Not "pull the bar down" — the bar coming down is a consequence, not the intention. Think about where the elbow finishes.</li>
-      <li><strong>End the set at the rep where the torso wants to move</strong> — not the rep where the lats fail. That rep adds erector fatigue and nothing else.</li>
-    </ol>
-
-    <div class="note is-key"><strong>Correction, from the gym floor.</strong> I read the manufacturer's page three ways and concluded the Iso-Lateral Front Lat Pulldown had only a thigh hold-down. It has a <strong>chest pad</strong> — confirmed in person, which beats a spec sheet. That upgrades the machine materially: it is now a genuinely <em>torso-supported</em> vertical pull, which is the exact configuration Fenwick found produced the highest lat activation and the lowest spine load simultaneously. Combined with the chest-padded Iso-Lateral Row, <strong>both of the exercises that were giving you erector fatigue now have fully supported versions available.</strong> Use the pad, don't just sit near it.</div>
-
-    <h3>Core: one movement, loaded — not more exercises</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>The usual reassurance — "the compounds train your core" — fails on its own terms in <em>your</em> program. Hamlyn (2007) found <strong>no significant abdominal activation difference</strong> between 80% 1RM squats and deadlifts and bodyweight exercises; compounds are an <em>erector</em> stimulus, not an abdominal one. And Clark (2019) compared back squat to <strong>hack squat</strong> directly, finding the hack squat produced significantly less trunk activation across nearly every muscle and phase. Your program is deliberately built from hack squats, leg presses and machine presses — engineered to minimise trunk demand.</p>
-      <p class="app"><span class="lab">Practical application</span>So one direct movement is the right number, and you have it. But <strong>load it</strong>: 3 × 8–12 with a dumbbell between the feet, progressing load rather than reps. Bodyweight knee raises for 15 reps is submaximal for an intermediate lifter. Moved to Day 2 — on Day 5 it was the fifth exercise, getting whatever survived the hack squats.</p>
-    </div>
-    <div class="note"><strong>The optional four minutes that genuinely earn their place.</strong> Your actual reported problem is compensatory lumbar <em>extension</em> under load — that's an anti-extension demand, not a flexion-strength one. Escamilla (2010) found the ab wheel rollout produces the highest abdominal and oblique activity in the literature <strong>while minimising lumbar paraspinal activation</strong> — the exact inverse of your failure mode. Two sets from the knees, partial range, at session end. Skip it if you only care about abs showing, because that is a body-fat question and nothing else: Kostek (2007, n=104, MRI) found <strong>spot reduction does not occur</strong>, and Vispute ran six weeks of seven ab exercises five days a week with <strong>no change in abdominal fat or waist girth</strong>.</div>
-    <div class="note"><strong>And core work is not back insurance.</strong> Smith (2014, 29 trials) found strong evidence that stabilisation exercise is <strong>no better than any other active exercise</strong> long-term. Lauersen (2014) found strength training drove a ~68% injury reduction — core and proprioceptive work were not the effective ingredient. One more correction while we're here: Saraceni (2020, <em>JOSPT</em>) found lumbar flexion during lifting is <strong>not</strong> a risk factor for back pain, and people <em>with</em> back pain flexed about 6° less. Don't take a flexion phobia away from this document — the defensible claim is narrow and specific, and it's about held positions in your first waking hour.</div>
-
-    <div class="note"><strong>Two things with no peer-reviewed support of any kind</strong>, despite confident marketing: the Hammer Strength <strong>converging arc</strong> (the pec's transverse-adduction function is real anatomy, but "therefore the arc grows more pec" is untested inference), and <strong>"train back before chest."</strong> Both trace to manufacturer copy and gym-floor lore. Use the machines because they're comfortable and well-built, which they are.</div>
-  </section>
-
-  <section id="axial">
-    <div class="sec-head">
-      <span class="sec-num">03 — Axial loading</span>
-      <h2>Where the lumbar fatigue comes from</h2>
-    </div>
-
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>Fenwick, Brown &amp; McGill (2009, <em>JSCR</em>) found the <strong>supported row produced the highest lat, upper back and hip extensor activation while producing the lowest lumbar erector activation and lowest spine load.</strong> The bent-over row produced the highest spine load. The standing one-arm cable row produced the greatest axial rotation — which matters because Marras (1993, <em>Spine</em>, >400 industrial jobs) found <strong>trunk asymmetry and velocity</strong> to be independent risk contributors with predictive power more than three times that of standard lifting guidelines.</p>
-      <p class="app"><span class="lab">Practical application</span>Chest-supported rowing is your <strong>primary</strong> horizontal pull. It won on stimulus <em>and</em> spine load simultaneously — not a trade.</p>
-    </div>
-
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>⚠️ <strong>Mechanistic reasoning, not measurement.</strong> No study measuring lumbar load during lat pulldown or seated cable row was found. What is documented: torso swing shifts emphasis off the lats onto the erectors, and grip variations don't meaningfully change lat activation — so the lay-back buys nothing on the prime mover.</p>
-      <p class="app"><span class="lab">Practical application</span>Your soreness is almost certainly <strong>isometric trunk-position work.</strong> Anchor rather than deload — and with the chest pad confirmed on both the pulldown and the row, <strong>the equipment now does most of the anchoring for you.</strong> Chest on the pad, thighs under the hold-down, pelvis neutral, light brace, trunk angle never changing rep to rep. <strong>Test it in week one at the same load.</strong> If the soreness resolves, confirmed. If it doesn't, this directive is wrong and we look elsewhere — and the remaining suspect becomes the pressing, not the pulling.</p>
-    </div>
-
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>Three lines converge on morning timing. Adams, Dolan &amp; Hutton (1987, <em>Spine</em>): early-morning forward bending raises bending stress <strong>~300% in the disc</strong> (⚠️ in-vitro cadaveric creep). Tyrrell (1985, <em>Spine</em>), by stadiometry: <strong>54% of the entire day's stature loss happens in the first hour after rising.</strong> And Snook (1998, <em>Spine</em>) — an <strong>18-month sham-controlled RCT in 85 chronic back-pain subjects</strong> — found restricting early-morning lumbar flexion cut <strong>a 33% reduction in pain intensity (95% CI 11–55%)</strong> against a sham group given six exercises known to be ineffective.</p>
-      <p class="app"><span class="lab">Practical application</span>Mechanism, dose-time curve and a sham-controlled RCT all agree — very little in strength coaching is supported this well, and Tyrrell's 54% is why "one hour" is the right interval rather than an arbitrary one. <strong>Wake 60–90 minutes before training, not 30, and spend it upright and moving.</strong> Put any hinge at the end of the session. No static flexion stretching in the first hour — five minutes of flexion creep cuts bending resistance 42% (Adams &amp; Dolan 1996). A morning toe-touch before hinging is exactly backwards.</p>
-    </div>
-
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>Maeo (2021, <em>MSSE</em>), 12-week <strong>within-subject</strong> trial: <strong>seated</strong> leg curl (hip flexed, hamstrings lengthened) produced <strong>greater hypertrophy in all three biarticular hamstrings</strong> than prone. A direct controlled test of the exact mechanism the RDL is prized for — with zero spinal flexion moment.</p>
-      <p class="app"><span class="lab">Practical application</span><strong>Seated leg curl is your primary hamstring builder.</strong> Keep the RDL for hip-extension strength at moderate load, 2–3 RIR, placed last in the session. That resolves the 06:30 timing conflict without losing hamstring stimulus.</p>
-    </div>
-
-    <div class="note"><strong>An inversion worth absorbing.</strong> McGill (1991) found anterior shear rose from 492 to 736 N as load increased while <strong>shear borne by the facets and disc stayed roughly constant at ~200 N</strong> — the musculature absorbs the increment. The erectors aren't a liability to minimise; they're what keeps shear off the passive structures. The goal is <em>selective offloading during pulling and pressing</em>, not detraining them. Which is why cutting the 45° back extension is a volume-redundancy call, not a safety one — and why dropping it won't make you weaker.</div>
-
-    <div class="note"><strong>Two cues that don't survive scrutiny.</strong> van Dieën (1999) found spinal compression <strong>not significantly different between stoop and squat lifting</strong> — "squat, don't stoop" has no load-reduction basis. Saraceni (2020, <em>JOSPT</em> meta-analysis) found low-quality evidence that greater lumbar flexion during lifting is <strong>not</strong> a risk factor for back pain onset. What survives: <strong>keep the load close</strong> (the only cue with unambiguous mechanical support), <strong>move slowly and symmetrically</strong>, and hold a consistent actively-controlled position.</div>
-  </section>
-
-  <section id="fatloss">
-    <div class="sec-head">
-      <span class="sec-num">04 — Fat loss</span>
-      <h2>Cardio is your third lever, not your first</h2>
-    </div>
-
-    <div class="pair">
-      <p><span class="lab">Literature insight</span><strong>Lopez (2022, <em>Obesity Reviews</em>, 114 trials, 4,184 participants)</strong> found <strong>resistance training plus caloric restriction was the single most effective combination for fat loss</strong> — −3.8% body fat, −5.3 kg fat mass — ahead of every aerobic-inclusive arm, while also being best for lean mass (+0.8 kg). And <strong>Johns (2014, 8 direct comparisons, 1,022 participants)</strong> found adding exercise to a diet programme produced <strong>no significant additional weight loss at 3–6 months</strong> (−0.62 kg, CI crossing zero). Wewege (2022, 58 studies) shows resistance training independently reduces body fat percentage, fat mass and visceral fat.</p>
-      <p class="app"><span class="lab">Practical application</span>Your <strong>five lifting sessions plus a controlled deficit are the fat-loss programme.</strong> Cardio's job is to keep the deficit small enough to protect muscle, and to buy cardiorespiratory fitness — both excellent reasons. "Burning fat" is not one of them.</p>
-    </div>
-
-    <h3>Higher heart rate or Zone 2? Neither — and here's the arithmetic</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>Peak fat oxidation is <strong>~0.47 g/min at ~64% VO₂max</strong> (Achten 2002). Forty-five minutes at exactly the right intensity oxidises about 21 g of fat — roughly 190 kcal, against 7,700 kcal in a kilogram. Every outcome-first meta-analysis agrees intensity doesn't matter: Keating (2017, 31 studies, 873 participants) found no difference on any body-fat measure, and where HIIT had <em>lower</em> time commitment, results favoured steady-state. Sultana (2019, 47 studies) is sharpest: <strong>low-volume HIIT didn't significantly reduce fat mass at all</strong> (ES −0.129) while still improving fitness.</p>
-      <p class="app"><span class="lab">Practical application</span>Prescribe cardio by <strong>duration, not by zone</strong>. You are buying weekly energy expenditure and aerobic base at low recovery cost. Don't raise the heart rate believing it burns more fat; don't lower it believing the same.</p>
-    </div>
-
-    <div class="note is-warn"><strong>Two numbers that run opposite to the marketing.</strong> EPOC — the "afterburn" — is <strong>tens of kilocalories</strong>, roughly a banana, and it is the most oversold concept in commercial fitness. Meanwhile the effect nobody sells you, <strong>~28% energy compensation</strong> (Careau 2021, n=1,754, doubly-labelled water), is about ten times larger and runs the other way: only ~72% of exercise calories show up in daily expenditure. <strong>Discount whatever your watch says by roughly a quarter before eating any of it back.</strong></div>
-
-    <h3>Fasted training does what it claims and none of what it promises</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>Fasted exercise genuinely raises fat oxidation during the session — Vieira (2016, <em>Br J Nutr</em>, 27 trials) confirms it robustly. It changes nothing about body composition: Schoenfeld (2014) ran the matched-hypocaloric test and found <strong>no between-group difference on any outcome.</strong> Separately, a resistance session expends roughly 200–350 kcal against 400–540 for a Zone 2 session, so lifting fasted does not substitute for cardio — the gap is in total energy, not substrate.</p>
-      <p class="app"><span class="lab">Practical application</span>Lift fasted because it suits 06:30. That's a legitimate reason. Just not the fat-loss one. Black coffee beforehand is fine and performance-motivated only — and caffeine's fat-oxidation effect is <strong>smaller in trained people</strong> (Collado-Mateo 2020).</p>
-    </div>
-
-    <h3>The harder run: get the stimulus, skip the risk</h3>
-    <div class="pair">
-      <p><span class="lab">Literature insight</span>At ~180 max, 150–165 bpm is 83–92% — threshold to VO₂max work, a <strong>two-zone jump</strong>, not a slightly harder Zone 2. Interference isn't the concern: Fyfe (2016) is titled, near enough, "endurance training intensity does not mediate interference" — the moderators are volume and frequency, not intensity. The concern is that a hard, high-impact, eccentrically-loaded run performed under-fuelled is the highest injury-risk item in your week; low energy availability affects ~49% of male athletes with consistent evidence of elevated bone stress injury risk. Against that, the case <em>for</em> intensity is real: Mandsager (2018, <em>JAMA Netw Open</em>, 122,007 patients) found fitness predicts mortality with <strong>no observed upper limit of benefit.</strong></p>
-      <p class="app"><span class="lab">Practical application</span>Don't turn the 5 km into a sustained hard effort while cutting. Instead, once weekly at most: <strong>5 × 3 min at 150–165 bpm with 2–3 min easy between</strong>, after a 10-minute warm-up. Same VO₂max stimulus, a fraction of the eccentric load. <strong>Or do those intervals on the bike</strong> — near-zero eccentric load, entire cardiovascular benefit retained. Drop it in any week where sleep, recovery or joints are poor.</p>
-    </div>
-
-    <div class="note is-key"><strong>The lever nobody mentions.</strong> Given ~28% compensation, the most reliable exercise-side variable isn't cardio sessions at all — it's daily steps. <strong>Set a floor of 8,000–10,000/day and monitor it.</strong> The compensation literature predicts your unconscious activity will drift downward as the deficit accumulates, and falling NEAT will quietly eat your Zone 2 sessions without you noticing.</div>
-  </section>
-
-  <section id="nutrition">
-    <div class="sec-head">
-      <span class="sec-num">05 — Nutrition</span>
-      <h2>Set the deficit, then stop fiddling</h2>
-    </div>
-
-    <div class="note is-warn"><strong>⚠️ The deficit ceiling is now properly sourced.</strong> Murphy &amp; Koehler (2022, <em>Scand J Med Sci Sports</em>) meta-regression found an energy deficit impaired lean-mass gains (ES −0.57) with <strong>~500 kcal/day the point at which lean-mass gain was abolished</strong> — strength was preserved either way. At 75 kg and 20%+ body fat, maintenance is roughly 2,550–2,700 kcal. <strong>Target 2,300–2,400 and no lower.</strong></div>
-
-    <div class="col">
-      <p>Aim for <strong>0.5–0.7% of body weight per week</strong> (~0.4–0.5 kg). Garthe (2011, RCT in elite athletes) found the slower rate preserved lean mass where 1.4%/week did not. At your body fat you have room to run this 12–16 weeks.</p>
-      <p><strong>Macros:</strong> protein <strong>180 g</strong> (Helms 2014: 1.8–2.7 g/kg during energy restriction), fat <strong>60–70 g</strong>, carbohydrate <strong>240–270 g</strong>. Reassess every three weeks against the four-week rolling weight average, adjusting ±150 kcal.</p>
-    </div>
-
-    <h3>Stop doing these</h3>
-    <div class="audit">
-      <div class="item is-cut">
-        <div class="item-top"><span class="item-name">The second creatine dose</span><span class="chip is-cut">Halve the cost</span></div>
-        <p class="item-why">You take 10 g on lifting days. Hultman (1996, direct muscle biopsy) showed saturation is <strong>held on 2 g/day</strong>, and a 2024 dose-response meta found no dose-response above ~5 g/day. One 5 g dose, any time.</p>
-      </div>
-      <div class="item is-cut">
-        <div class="item-top"><span class="item-name">Pairing creatine with carbs on purpose</span><span class="chip is-cut">Loading-phase artefact</span></div>
-        <p class="item-why">Green (1996) and Steenge (2000) both ran <strong>5-day loading at 20 g/day in creatine-naive men</strong> — the famous 60% figure is an advantage in <em>filling an empty tank</em>. Once saturated, extra insulin has nothing left to push in.</p>
-      </div>
-      <div class="item is-cut">
-        <div class="item-top"><span class="item-name">The ¼ tsp salt before lifting</span><span class="chip is-cut">Unsupported</span></div>
-        <p class="item-why">ACSM's fluid stand recommends sodium for exercise <strong>beyond one hour</strong>, and every retention study is in dehydrated or heat-stressed subjects. Keep it for the run in heat. Drink the water regardless.</p>
-      </div>
-      <div class="item is-cut">
-        <div class="item-top"><span class="item-name">Collagen</span><span class="chip is-cut">I recommended this — cancelled</span></div>
-        <p class="item-why">Shaw (2017) is <strong>n=8</strong> measuring serum PINP, a marker predominantly reflecting <strong>bone</strong> collagen, with the tendon data from engineered ligaments in a dish. Aussieker (2023, <em>MSSE</em>) measured connective tissue protein synthesis directly with tracers: <strong>collagen did nothing.</strong></p>
-      </div>
-    </div>
-
-    <h3>Keep these</h3>
-    <ul class="col">
-      <li><strong>The 50 g shake.</strong> Trommelen (2023, <em>Cell Reports Medicine</em>, quadruple-tracer) fed 100 g versus 25 g and found the large bolus produced a <strong>larger and &gt;12 h longer</strong> anabolic response. "Only 25–30 g can be used" was an artefact of studies that stopped measuring at five hours.</li>
-      <li><strong>The 08:00 timing.</strong> Schoenfeld, Aragon &amp; Krieger (2013) found the protein-timing effect <strong>disappeared once total protein was controlled.</strong> There is no window to miss.</li>
-      <li><strong>The two dates pre-lift</strong> — but know what they do. King (2022, 21 studies): carbohydrate helps only in sessions over 45 minutes. An overnight fast changes muscle glycogen <strong>&lt;3%</strong>. Naharudin (2020) showed a <strong>29 kcal sham breakfast reproduced the entire benefit.</strong> It's a gastric-fill cue. Don't scale it up — and in a deficit those calories now count.</li>
-      <li><strong>Four protein feedings of ~45 g</strong>, one at 21:00–22:00. Don't <em>add</em> a pre-sleep shake — Joy (2018), the one trial matching total protein and only moving casein to night, found no difference. Redistribute.</li>
-      <li><strong>Get 25(OH)D measured</strong> before supplementing. Sist (2023, 11 RCTs) found an effect only when baseline was low. Omega-3 at 1–2 g/day is defensible on cardiovascular grounds only.</li>
-    </ul>
-  </section>
-
   <section id="warmup">
     <div class="sec-head">
       <span class="sec-num">06 — Warm-up</span>
@@ -437,7 +260,6 @@
       <li><strong>Four or more ramping sets on anything.</strong></li>
     </ul>
   </section>
-
   <section id="routine">
     <div class="sec-head">
       <span class="sec-num">07 — The program</span>
@@ -559,7 +381,6 @@
 
     </div>
   </section>
-
   <section id="weekly">
     <div class="sec-head">
       <span class="sec-num">08 — Weekly totals</span>
@@ -587,7 +408,228 @@
     </table></div>
     <div class="note"><strong>A correction worth recording.</strong> Rear delts were raised from 3 to 6 sets on a volume-allocation argument — and the research had explicitly flagged that claim as <em>inference, not evidence</em>, since no RCT exists on rear delt volume. The count was also wrong: it ignored the indirect contribution from nine weekly pulling sets, so rear delts were never really at 3. Reduced to 4, and the freed sets went to the back, which the audit showed was genuinely thin. <strong>Session lengths now run 15–18 instead of 12–20.</strong></div>
   </section>
+  </div>
+  <div class="panel" id="reasoning" role="region" aria-label="Reasoning">
+    <p class="panel-blurb">Why each exercise is in, and what turned out not to matter</p>
+  <section id="selection">
+    <div class="sec-head">
+      <span class="sec-num">02 — Exercise selection</span>
+      <h2>The three that actually change something</h2>
+    </div>
 
+    <h3>Day 6 does not need a biceps exercise</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>Two findings that look contradictory but aren't. <strong>Mannarino (2021, <em>JSCR</em>, contralateral design)</strong> found elbow flexor hypertrophy of <strong>+11.1% from a biceps curl versus +5.2% from a dumbbell row</strong> — so direct curls genuinely earn their place, and "compounds are enough for arms" is wrong. But <strong>de França (2015, <em>Appl Physiol Nutr Metab</em>, trained men)</strong> found that adding isolation <em>on top of</em> a program that already has it produces no additional size or strength. Gentil (2013) and Bezerra (2018) agree. And the study most often cited on this — Rogers (2000), showing +6.6% vs +6.5% arm circumference — is <strong>a conference abstract that never became a paper, measuring with a tape</strong>. It should carry almost no weight.</p>
+      <p class="app"><span class="lab">Practical application</span>Keep both curls on Day 1. <strong>Add nothing to Day 6.</strong> Under fractional counting your biceps already receive 8–12 weekly sets from the pulling before any curl. In a deficit, an unspent recovery slot is not a wasted one.</p>
+    </div>
+
+    <h3>The Super Incline Press is a shoulder press</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span><strong>Rodríguez-Ridao (2020, <em>IJERPH</em>, 30 trained subjects, five bench angles)</strong> found upper (clavicular) pec activation <strong>peaks at 30°</strong>, with anterior deltoid climbing steadily as the bench gets steeper and mid/lower pec output falling. Lauver (2016) agrees on 30–45°. On the hypertrophy side, Chaves (2020, 8 weeks, sets equated) found upper-pec thickness increased most in the incline-only group — though in untrained subjects at once weekly. <strong>No evidence supports 60–70° for chest.</strong> The manufacturer's own copy says the machine "closely mimics the mechanics of a front military press."</p>
+      <p class="app"><span class="lab">Practical application</span>Keep the incline at <strong>~30°, 45° at the outside.</strong> Above that you are buying anterior deltoid you already train and paying for it in pec stimulus. If you want a shoulder press, program a shoulder press — you already have one on Day 6.</p>
+    </div>
+
+    <h3>Keep the lat pulldown — and it's the better choice for you specifically</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>First, the honest part: <strong>no hypertrophy trial comparing pulldown to pull-up exists.</strong> Anyone calling the pulldown "one of the best vertical pulls" is extrapolating from acute EMG, which <strong>Vigotsky (2018, 2022, <em>Sports Medicine</em>) shows is not a validated predictor of hypertrophy.</strong> What does exist: Doma (2013, <em>Sports Biomechanics</em>) found <strong>no difference in latissimus activation</strong> between chin-up and pulldown — but chin-ups produced greater biceps <em>and greater erector spinae</em> activity. The only variant with real support to avoid is behind-the-neck (Sperandei 2009).</p>
+      <p class="app"><span class="lab">Practical application</span>Keep it, and keep it for the right reason: it is the <em>better</em> option given your complaint, not a compromise. Doma's erector finding is the one result that maps directly onto your problem. <strong>This also means the Day 6 pull-up is working against you</strong> — it's been swapped for a second pulldown variation below. If pull-ups have never aggravated your back, put them back; you're the evidence that matters on that one.</p>
+    </div>
+
+    <h3>Setting up the pulldown — the seven-second checklist</h3>
+    <div class="col">
+      <p>You asked for setup instructions rather than a single cue, and that's the right instinct: on this movement the setup <em>is</em> the technique. Run this before every set, not just the first.</p>
+    </div>
+    <ol class="col">
+      <li><strong>Thigh pad tight — no daylight.</strong> If your hips can lift even slightly, the load pulls you up and your erectors spend the set fighting it. This is the single biggest contributor to your soreness.</li>
+      <li><strong>Chest on the pad before rep one, and it stays there.</strong> The set ends when the chest leaves it, regardless of how many reps you had planned.</li>
+      <li><strong>Exhale fully and let the ribs drop.</strong> This kills the arch before it can start. Do it once, at the top, before you pull.</li>
+      <li><strong>Set the trunk angle once — about 10–15° back — and never change it.</strong> Every degree of rep-to-rep drift is erector work you didn't want to buy.</li>
+      <li><strong>Brace light, around 10–15%.</strong> Maximal bracing here adds spinal compression to buy stability you don't need.</li>
+      <li><strong>The mental model: drive the elbow down toward your back pocket.</strong> Not "pull the bar down" — the bar coming down is a consequence, not the intention. Think about where the elbow finishes.</li>
+      <li><strong>End the set at the rep where the torso wants to move</strong> — not the rep where the lats fail. That rep adds erector fatigue and nothing else.</li>
+    </ol>
+
+    <div class="note is-key"><strong>Correction, from the gym floor.</strong> I read the manufacturer's page three ways and concluded the Iso-Lateral Front Lat Pulldown had only a thigh hold-down. It has a <strong>chest pad</strong> — confirmed in person, which beats a spec sheet. That upgrades the machine materially: it is now a genuinely <em>torso-supported</em> vertical pull, which is the exact configuration Fenwick found produced the highest lat activation and the lowest spine load simultaneously. Combined with the chest-padded Iso-Lateral Row, <strong>both of the exercises that were giving you erector fatigue now have fully supported versions available.</strong> Use the pad, don't just sit near it.</div>
+
+    <h3>Core: one movement, loaded — not more exercises</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>The usual reassurance — "the compounds train your core" — fails on its own terms in <em>your</em> program. Hamlyn (2007) found <strong>no significant abdominal activation difference</strong> between 80% 1RM squats and deadlifts and bodyweight exercises; compounds are an <em>erector</em> stimulus, not an abdominal one. And Clark (2019) compared back squat to <strong>hack squat</strong> directly, finding the hack squat produced significantly less trunk activation across nearly every muscle and phase. Your program is deliberately built from hack squats, leg presses and machine presses — engineered to minimise trunk demand.</p>
+      <p class="app"><span class="lab">Practical application</span>So one direct movement is the right number, and you have it. But <strong>load it</strong>: 3 × 8–12 with a dumbbell between the feet, progressing load rather than reps. Bodyweight knee raises for 15 reps is submaximal for an intermediate lifter. Moved to Day 2 — on Day 5 it was the fifth exercise, getting whatever survived the hack squats.</p>
+    </div>
+    <div class="note"><strong>The optional four minutes that genuinely earn their place.</strong> Your actual reported problem is compensatory lumbar <em>extension</em> under load — that's an anti-extension demand, not a flexion-strength one. Escamilla (2010) found the ab wheel rollout produces the highest abdominal and oblique activity in the literature <strong>while minimising lumbar paraspinal activation</strong> — the exact inverse of your failure mode. Two sets from the knees, partial range, at session end. Skip it if you only care about abs showing, because that is a body-fat question and nothing else: Kostek (2007, n=104, MRI) found <strong>spot reduction does not occur</strong>, and Vispute ran six weeks of seven ab exercises five days a week with <strong>no change in abdominal fat or waist girth</strong>.</div>
+    <div class="note"><strong>And core work is not back insurance.</strong> Smith (2014, 29 trials) found strong evidence that stabilisation exercise is <strong>no better than any other active exercise</strong> long-term. Lauersen (2014) found strength training drove a ~68% injury reduction — core and proprioceptive work were not the effective ingredient. One more correction while we're here: Saraceni (2020, <em>JOSPT</em>) found lumbar flexion during lifting is <strong>not</strong> a risk factor for back pain, and people <em>with</em> back pain flexed about 6° less. Don't take a flexion phobia away from this document — the defensible claim is narrow and specific, and it's about held positions in your first waking hour.</div>
+
+    <div class="note"><strong>Two things with no peer-reviewed support of any kind</strong>, despite confident marketing: the Hammer Strength <strong>converging arc</strong> (the pec's transverse-adduction function is real anatomy, but "therefore the arc grows more pec" is untested inference), and <strong>"train back before chest."</strong> Both trace to manufacturer copy and gym-floor lore. Use the machines because they're comfortable and well-built, which they are.</div>
+  </section>
+  <section id="axial">
+    <div class="sec-head">
+      <span class="sec-num">03 — Axial loading</span>
+      <h2>Where the lumbar fatigue comes from</h2>
+    </div>
+
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>Fenwick, Brown &amp; McGill (2009, <em>JSCR</em>) found the <strong>supported row produced the highest lat, upper back and hip extensor activation while producing the lowest lumbar erector activation and lowest spine load.</strong> The bent-over row produced the highest spine load. The standing one-arm cable row produced the greatest axial rotation — which matters because Marras (1993, <em>Spine</em>, >400 industrial jobs) found <strong>trunk asymmetry and velocity</strong> to be independent risk contributors with predictive power more than three times that of standard lifting guidelines.</p>
+      <p class="app"><span class="lab">Practical application</span>Chest-supported rowing is your <strong>primary</strong> horizontal pull. It won on stimulus <em>and</em> spine load simultaneously — not a trade.</p>
+    </div>
+
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>⚠️ <strong>Mechanistic reasoning, not measurement.</strong> No study measuring lumbar load during lat pulldown or seated cable row was found. What is documented: torso swing shifts emphasis off the lats onto the erectors, and grip variations don't meaningfully change lat activation — so the lay-back buys nothing on the prime mover.</p>
+      <p class="app"><span class="lab">Practical application</span>Your soreness is almost certainly <strong>isometric trunk-position work.</strong> Anchor rather than deload — and with the chest pad confirmed on both the pulldown and the row, <strong>the equipment now does most of the anchoring for you.</strong> Chest on the pad, thighs under the hold-down, pelvis neutral, light brace, trunk angle never changing rep to rep. <strong>Test it in week one at the same load.</strong> If the soreness resolves, confirmed. If it doesn't, this directive is wrong and we look elsewhere — and the remaining suspect becomes the pressing, not the pulling.</p>
+    </div>
+
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>Three lines converge on morning timing. Adams, Dolan &amp; Hutton (1987, <em>Spine</em>): early-morning forward bending raises bending stress <strong>~300% in the disc</strong> (⚠️ in-vitro cadaveric creep). Tyrrell (1985, <em>Spine</em>), by stadiometry: <strong>54% of the entire day's stature loss happens in the first hour after rising.</strong> And Snook (1998, <em>Spine</em>) — an <strong>18-month sham-controlled RCT in 85 chronic back-pain subjects</strong> — found restricting early-morning lumbar flexion cut <strong>a 33% reduction in pain intensity (95% CI 11–55%)</strong> against a sham group given six exercises known to be ineffective.</p>
+      <p class="app"><span class="lab">Practical application</span>Mechanism, dose-time curve and a sham-controlled RCT all agree — very little in strength coaching is supported this well, and Tyrrell's 54% is why "one hour" is the right interval rather than an arbitrary one. <strong>Wake 60–90 minutes before training, not 30, and spend it upright and moving.</strong> Put any hinge at the end of the session. No static flexion stretching in the first hour — five minutes of flexion creep cuts bending resistance 42% (Adams &amp; Dolan 1996). A morning toe-touch before hinging is exactly backwards.</p>
+    </div>
+
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>Maeo (2021, <em>MSSE</em>), 12-week <strong>within-subject</strong> trial: <strong>seated</strong> leg curl (hip flexed, hamstrings lengthened) produced <strong>greater hypertrophy in all three biarticular hamstrings</strong> than prone. A direct controlled test of the exact mechanism the RDL is prized for — with zero spinal flexion moment.</p>
+      <p class="app"><span class="lab">Practical application</span><strong>Seated leg curl is your primary hamstring builder.</strong> Keep the RDL for hip-extension strength at moderate load, 2–3 RIR, placed last in the session. That resolves the 06:30 timing conflict without losing hamstring stimulus.</p>
+    </div>
+
+    <div class="note"><strong>An inversion worth absorbing.</strong> McGill (1991) found anterior shear rose from 492 to 736 N as load increased while <strong>shear borne by the facets and disc stayed roughly constant at ~200 N</strong> — the musculature absorbs the increment. The erectors aren't a liability to minimise; they're what keeps shear off the passive structures. The goal is <em>selective offloading during pulling and pressing</em>, not detraining them. Which is why cutting the 45° back extension is a volume-redundancy call, not a safety one — and why dropping it won't make you weaker.</div>
+
+    <div class="note"><strong>Two cues that don't survive scrutiny.</strong> van Dieën (1999) found spinal compression <strong>not significantly different between stoop and squat lifting</strong> — "squat, don't stoop" has no load-reduction basis. Saraceni (2020, <em>JOSPT</em> meta-analysis) found low-quality evidence that greater lumbar flexion during lifting is <strong>not</strong> a risk factor for back pain onset. What survives: <strong>keep the load close</strong> (the only cue with unambiguous mechanical support), <strong>move slowly and symmetrically</strong>, and hold a consistent actively-controlled position.</div>
+  </section>
+  <section id="settled">
+    <div class="sec-head">
+      <span class="sec-num">01 — Settled</span>
+      <h2>Six questions you can stop asking</h2>
+    </div>
+    <div class="col">
+      <p>Each of these was tested properly and came back null. Note the pattern: <strong>the strongest study in this batch is a negative result whose authors predicted the opposite.</strong></p>
+    </div>
+    <div class="settled">
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Pulldown grip width &amp; orientation</span>
+        <p class="settled-why">Buonsenso (2025), <strong>40 trained men, seven variants</strong> — no significant difference in lat activation across any grip type, width or trunk angle. Andersen (2014) and Lusk (2010) agree. "Wide grip for lats" outlived its evidence.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Iso-lateral vs bilateral</span>
+        <p class="settled-why">Kassiano (2025, <em>Sports Medicine</em>, 9-study meta-analysis): <strong>no hypertrophy difference</strong> (ES −0.21). Strength follows test specificity. Choose iso-lateral for bracing and side-to-side balance, not growth.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Lateral raise: cable vs dumbbell vs machine</span>
+        <p class="settled-why">Larsen (2025, <em>Front Physiol</em>), 24 trained, within-subject, ROM-matched. The authors <strong>hypothesised cables would win</strong> and got moderate-to-extreme Bayesian support for the null. Delt thickness rose 3.3–4.6% either way.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Machine vs free weight</span>
+        <p class="settled-why">Haugen (2023), <strong>13 studies, n=1,016</strong> — equal for hypertrophy, dynamic strength, isometric strength and jump. Only strength <em>testing</em> is modality-specific, and you have no free-weight test to be specific to.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Exercise order</span>
+        <p class="settled-why">Nunes (2021, <em>Eur J Sport Sci</em>, 11-study meta-analysis): <strong>no effect of order on hypertrophy.</strong> Strength gains favour whatever sits first. And <strong>"back before chest" has no evidence base at all</strong> — it traces to gym-floor copy.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Where the fly's resistance peaks</span>
+        <p class="settled-why">The one direct test of ascending versus descending resistance profile in a chest fly found <strong>~18% vs ~20% pec growth, not significantly different.</strong> Selecting exercises by resistance curve is currently an aesthetic preference, not a method.</p>
+      </div>
+    </div>
+    <div class="note"><strong>A caveat that limits all six.</strong> Most of these null findings come from untrained subjects, who grow from almost anything — which makes "no difference" weaker evidence than it looks for a trained 40-year-old. The genuinely trained-subject evidence here is about five studies deep. Treat these as "stop optimising," not as proven equivalence.</div>
+  </section>
+  </div>
+  <div class="panel" id="fuel" role="region" aria-label="Fuel">
+    <p class="panel-blurb">Calories, protein, cardio for fat loss</p>
+  <section id="fatloss">
+    <div class="sec-head">
+      <span class="sec-num">04 — Fat loss</span>
+      <h2>Cardio is your third lever, not your first</h2>
+    </div>
+
+    <div class="pair">
+      <p><span class="lab">Literature insight</span><strong>Lopez (2022, <em>Obesity Reviews</em>, 114 trials, 4,184 participants)</strong> found <strong>resistance training plus caloric restriction was the single most effective combination for fat loss</strong> — −3.8% body fat, −5.3 kg fat mass — ahead of every aerobic-inclusive arm, while also being best for lean mass (+0.8 kg). And <strong>Johns (2014, 8 direct comparisons, 1,022 participants)</strong> found adding exercise to a diet programme produced <strong>no significant additional weight loss at 3–6 months</strong> (−0.62 kg, CI crossing zero). Wewege (2022, 58 studies) shows resistance training independently reduces body fat percentage, fat mass and visceral fat.</p>
+      <p class="app"><span class="lab">Practical application</span>Your <strong>five lifting sessions plus a controlled deficit are the fat-loss programme.</strong> Cardio's job is to keep the deficit small enough to protect muscle, and to buy cardiorespiratory fitness — both excellent reasons. "Burning fat" is not one of them.</p>
+    </div>
+
+    <h3>Higher heart rate or Zone 2? Neither — and here's the arithmetic</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>Peak fat oxidation is <strong>~0.47 g/min at ~64% VO₂max</strong> (Achten 2002). Forty-five minutes at exactly the right intensity oxidises about 21 g of fat — roughly 190 kcal, against 7,700 kcal in a kilogram. Every outcome-first meta-analysis agrees intensity doesn't matter: Keating (2017, 31 studies, 873 participants) found no difference on any body-fat measure, and where HIIT had <em>lower</em> time commitment, results favoured steady-state. Sultana (2019, 47 studies) is sharpest: <strong>low-volume HIIT didn't significantly reduce fat mass at all</strong> (ES −0.129) while still improving fitness.</p>
+      <p class="app"><span class="lab">Practical application</span>Prescribe cardio by <strong>duration, not by zone</strong>. You are buying weekly energy expenditure and aerobic base at low recovery cost. Don't raise the heart rate believing it burns more fat; don't lower it believing the same.</p>
+    </div>
+
+    <div class="note is-warn"><strong>Two numbers that run opposite to the marketing.</strong> EPOC — the "afterburn" — is <strong>tens of kilocalories</strong>, roughly a banana, and it is the most oversold concept in commercial fitness. Meanwhile the effect nobody sells you, <strong>~28% energy compensation</strong> (Careau 2021, n=1,754, doubly-labelled water), is about ten times larger and runs the other way: only ~72% of exercise calories show up in daily expenditure. <strong>Discount whatever your watch says by roughly a quarter before eating any of it back.</strong></div>
+
+    <h3>Fasted training does what it claims and none of what it promises</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>Fasted exercise genuinely raises fat oxidation during the session — Vieira (2016, <em>Br J Nutr</em>, 27 trials) confirms it robustly. It changes nothing about body composition: Schoenfeld (2014) ran the matched-hypocaloric test and found <strong>no between-group difference on any outcome.</strong> Separately, a resistance session expends roughly 200–350 kcal against 400–540 for a Zone 2 session, so lifting fasted does not substitute for cardio — the gap is in total energy, not substrate.</p>
+      <p class="app"><span class="lab">Practical application</span>Lift fasted because it suits 06:30. That's a legitimate reason. Just not the fat-loss one. Black coffee beforehand is fine and performance-motivated only — and caffeine's fat-oxidation effect is <strong>smaller in trained people</strong> (Collado-Mateo 2020).</p>
+    </div>
+
+    <h3>The harder run: get the stimulus, skip the risk</h3>
+    <div class="pair">
+      <p><span class="lab">Literature insight</span>At ~180 max, 150–165 bpm is 83–92% — threshold to VO₂max work, a <strong>two-zone jump</strong>, not a slightly harder Zone 2. Interference isn't the concern: Fyfe (2016) is titled, near enough, "endurance training intensity does not mediate interference" — the moderators are volume and frequency, not intensity. The concern is that a hard, high-impact, eccentrically-loaded run performed under-fuelled is the highest injury-risk item in your week; low energy availability affects ~49% of male athletes with consistent evidence of elevated bone stress injury risk. Against that, the case <em>for</em> intensity is real: Mandsager (2018, <em>JAMA Netw Open</em>, 122,007 patients) found fitness predicts mortality with <strong>no observed upper limit of benefit.</strong></p>
+      <p class="app"><span class="lab">Practical application</span>Don't turn the 5 km into a sustained hard effort while cutting. Instead, once weekly at most: <strong>5 × 3 min at 150–165 bpm with 2–3 min easy between</strong>, after a 10-minute warm-up. Same VO₂max stimulus, a fraction of the eccentric load. <strong>Or do those intervals on the bike</strong> — near-zero eccentric load, entire cardiovascular benefit retained. Drop it in any week where sleep, recovery or joints are poor.</p>
+    </div>
+
+    <div class="note is-key"><strong>The lever nobody mentions.</strong> Given ~28% compensation, the most reliable exercise-side variable isn't cardio sessions at all — it's daily steps. <strong>Set a floor of 8,000–10,000/day and monitor it.</strong> The compensation literature predicts your unconscious activity will drift downward as the deficit accumulates, and falling NEAT will quietly eat your Zone 2 sessions without you noticing.</div>
+  </section>
+  <section id="nutrition">
+    <div class="sec-head">
+      <span class="sec-num">05 — Nutrition</span>
+      <h2>Set the deficit, then stop fiddling</h2>
+    </div>
+
+    <div class="note is-warn"><strong>⚠️ The deficit ceiling is now properly sourced.</strong> Murphy &amp; Koehler (2022, <em>Scand J Med Sci Sports</em>) meta-regression found an energy deficit impaired lean-mass gains (ES −0.57) with <strong>~500 kcal/day the point at which lean-mass gain was abolished</strong> — strength was preserved either way. At 75 kg and 20%+ body fat, maintenance is roughly 2,550–2,700 kcal. <strong>Target 2,300–2,400 and no lower.</strong></div>
+
+    <div class="col">
+      <p>Aim for <strong>0.5–0.7% of body weight per week</strong> (~0.4–0.5 kg). Garthe (2011, RCT in elite athletes) found the slower rate preserved lean mass where 1.4%/week did not. At your body fat you have room to run this 12–16 weeks.</p>
+      <p><strong>Macros:</strong> protein <strong>180 g</strong> (Helms 2014: 1.8–2.7 g/kg during energy restriction), fat <strong>60–70 g</strong>, carbohydrate <strong>240–270 g</strong>. Reassess every three weeks against the four-week rolling weight average, adjusting ±150 kcal.</p>
+    </div>
+
+    <h3>Stop doing these</h3>
+    <div class="audit">
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">The second creatine dose</span><span class="chip is-cut">Halve the cost</span></div>
+        <p class="item-why">You take 10 g on lifting days. Hultman (1996, direct muscle biopsy) showed saturation is <strong>held on 2 g/day</strong>, and a 2024 dose-response meta found no dose-response above ~5 g/day. One 5 g dose, any time.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Pairing creatine with carbs on purpose</span><span class="chip is-cut">Loading-phase artefact</span></div>
+        <p class="item-why">Green (1996) and Steenge (2000) both ran <strong>5-day loading at 20 g/day in creatine-naive men</strong> — the famous 60% figure is an advantage in <em>filling an empty tank</em>. Once saturated, extra insulin has nothing left to push in.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">The ¼ tsp salt before lifting</span><span class="chip is-cut">Unsupported</span></div>
+        <p class="item-why">ACSM's fluid stand recommends sodium for exercise <strong>beyond one hour</strong>, and every retention study is in dehydrated or heat-stressed subjects. Keep it for the run in heat. Drink the water regardless.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Collagen</span><span class="chip is-cut">I recommended this — cancelled</span></div>
+        <p class="item-why">Shaw (2017) is <strong>n=8</strong> measuring serum PINP, a marker predominantly reflecting <strong>bone</strong> collagen, with the tendon data from engineered ligaments in a dish. Aussieker (2023, <em>MSSE</em>) measured connective tissue protein synthesis directly with tracers: <strong>collagen did nothing.</strong></p>
+      </div>
+    </div>
+
+    <h3>Keep these</h3>
+    <ul class="col">
+      <li><strong>The 50 g shake.</strong> Trommelen (2023, <em>Cell Reports Medicine</em>, quadruple-tracer) fed 100 g versus 25 g and found the large bolus produced a <strong>larger and &gt;12 h longer</strong> anabolic response. "Only 25–30 g can be used" was an artefact of studies that stopped measuring at five hours.</li>
+      <li><strong>The 08:00 timing.</strong> Schoenfeld, Aragon &amp; Krieger (2013) found the protein-timing effect <strong>disappeared once total protein was controlled.</strong> There is no window to miss.</li>
+      <li><strong>The two dates pre-lift</strong> — but know what they do. King (2022, 21 studies): carbohydrate helps only in sessions over 45 minutes. An overnight fast changes muscle glycogen <strong>&lt;3%</strong>. Naharudin (2020) showed a <strong>29 kcal sham breakfast reproduced the entire benefit.</strong> It's a gastric-fill cue. Don't scale it up — and in a deficit those calories now count.</li>
+      <li><strong>Four protein feedings of ~45 g</strong>, one at 21:00–22:00. Don't <em>add</em> a pre-sleep shake — Joy (2018), the one trial matching total protein and only moving casein to night, found no difference. Redistribute.</li>
+      <li><strong>Get 25(OH)D measured</strong> before supplementing. Sist (2023, 11 RCTs) found an effect only when baseline was low. Omega-3 at 1–2 g/day is defensible on cardiovascular grounds only.</li>
+    </ul>
+  </section>
+  </div>
+  <div class="panel" id="record" role="region" aria-label="Record">
+    <p class="panel-blurb">How to know it worked, and what changed</p>
+  <section id="verify">
+    <div class="sec-head">
+      <span class="sec-num">11 — Verification</span>
+      <span class="sec-num" style="display:none"></span>
+      <h2>How to know it worked</h2>
+    </div>
+    <ol class="col">
+      <li><strong>The postural test — week one.</strong> Lock the trunk on the pulldown and row at the <em>same load</em>. If erector soreness resolves, the mechanism is confirmed and your load never had to drop. If it doesn't, that directive is wrong. Cheapest test in the program.</li>
+      <li><strong>The morning-hinge test — four weeks.</strong> Hinge out of the first waking hour and placed last. Snook's RCT predicts symptom reduction; if none appears, the diurnal mechanism isn't your driver.</li>
+      <li><strong>Strength retention is the real endpoint in a cut.</strong> Holding load at matched RIR <em>is</em> success. If your indicator lifts hold for 12 weeks while weight falls 0.5% per week, the program worked — that is the outcome to judge it on, not the mirror.</li>
+      <li><strong>Weight trend.</strong> Four times weekly, fasted, four-week rolling average. 0.5–0.7% per week. Faster costs lean mass.</li>
+      <li><strong>Steps.</strong> Track them like a training variable, because they are one.</li>
+      <li><strong>Performance as the only fatigue marker.</strong> Two consecutive weeks of unexplained decline at matched RIR is your deload trigger — one week at 50% sets, load held constant. Not soreness, not HRV, not motivation.</li>
+      <li><strong>Tendon check.</strong> Morning Achilles and patellar stiffness on run day +1. Anything past 24 hours, hold running volume. Never run through Achilles symptoms — prior tendinopathy carries OR 6.3, dwarfing every training-load variable.</li>
+    </ol>
+  </section>
   <section id="corrections">
     <div class="sec-head">
       <span class="sec-num">09 — Corrections</span>
@@ -628,7 +670,6 @@
       </div>
     </div>
   </section>
-
   <section id="ledger">
     <div class="sec-head">
       <span class="sec-num">10 — Change ledger</span>
@@ -668,29 +709,33 @@
       </div>
     </div>
   </section>
-
-  <section id="verify">
-    <div class="sec-head">
-      <span class="sec-num">11 — Verification</span>
-      <span class="sec-num" style="display:none"></span>
-      <h2>How to know it worked</h2>
-    </div>
-    <ol class="col">
-      <li><strong>The postural test — week one.</strong> Lock the trunk on the pulldown and row at the <em>same load</em>. If erector soreness resolves, the mechanism is confirmed and your load never had to drop. If it doesn't, that directive is wrong. Cheapest test in the program.</li>
-      <li><strong>The morning-hinge test — four weeks.</strong> Hinge out of the first waking hour and placed last. Snook's RCT predicts symptom reduction; if none appears, the diurnal mechanism isn't your driver.</li>
-      <li><strong>Strength retention is the real endpoint in a cut.</strong> Holding load at matched RIR <em>is</em> success. If your indicator lifts hold for 12 weeks while weight falls 0.5% per week, the program worked — that is the outcome to judge it on, not the mirror.</li>
-      <li><strong>Weight trend.</strong> Four times weekly, fasted, four-week rolling average. 0.5–0.7% per week. Faster costs lean mass.</li>
-      <li><strong>Steps.</strong> Track them like a training variable, because they are one.</li>
-      <li><strong>Performance as the only fatigue marker.</strong> Two consecutive weeks of unexplained decline at matched RIR is your deload trigger — one week at 50% sets, load held constant. Not soreness, not HRV, not motivation.</li>
-      <li><strong>Tendon check.</strong> Morning Achilles and patellar stiffness on run day +1. Anything past 24 hours, hold running volume. Never run through Achilles symptoms — prior tendinopathy carries OR 6.3, dwarfing every training-load variable.</li>
-    </ol>
-  </section>
-
+  </div>
   <footer>
     General training and nutrition analysis, not medical advice. Persistent or sharp lumbar pain, and any tendon symptom outlasting 24 hours, warrants assessment by a physiotherapist or physician before continuing to load it. Citations were verified by literature search; where a study's numbers could not be retrieved from full text, where a claim rests on mechanistic reasoning rather than measurement, or where the underlying subjects were untrained, that is marked in the text rather than smoothed over.
   </footer>
-
 </div>
-<p style="max-width:62rem;margin:0 auto;padding:0 clamp(1.1rem,4vw,2.75rem) 3rem;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.7rem;color:var(--ink-3)">Last built 2026-08-26</p>
+<p style="max-width:62rem;margin:0 auto;padding:0 clamp(1.1rem,4vw,2.75rem) 3rem;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.7rem;color:var(--ink-3)">Last built 2026-08-26
+<script>
+(function () {
+  var b = document.body; b.classList.add('js');
+  var tabs = [].slice.call(document.querySelectorAll('.tab'));
+  var panels = [].slice.call(document.querySelectorAll('.panel'));
+  function show(slug, push) {
+    if (!document.getElementById(slug)) slug = tabs[0].dataset.tab;
+    panels.forEach(function (p) { p.hidden = (p.id !== slug); });
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === slug); });
+    if (push && location.hash.slice(1) !== slug) history.pushState(null, '', '#' + slug);
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      show(t.dataset.tab, true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  window.addEventListener('popstate', function () { show(location.hash.slice(1), false); });
+  show(location.hash.slice(1) || tabs[0].dataset.tab, false);
+})();
+</script>
+</p>
 </body>
 </html>
