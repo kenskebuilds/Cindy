@@ -23,6 +23,25 @@ head_bits = re.sub(
     r'\n  :root\[data-theme="dark"\] \{.*?\n  \}\n', u'\n',
     head_bits, flags=re.S)
 
+# Calmer light palette for the standalone page: a real grey ground so the
+# off-white cards read as surfaces, and stronger rules for separation.
+TONED = [
+    (u'--ground:#F5F7F9',     u'--ground:#E7ECF1'),
+    (u'--surface:#FFFFFF',    u'--surface:#F9FBFC'),
+    (u'--surface-2:#EDF1F4',  u'--surface-2:#DDE4EB'),
+    (u'--ink:#131A22',        u'--ink:#0F151B'),
+    (u'--ink-2:#4A5563',      u'--ink-2:#3F4954'),
+    (u'--ink-3:#78838F',      u'--ink-3:#69747F'),
+    (u'--rule:#DCE2E8',       u'--rule:#CCD5DD'),
+    (u'--rule-strong:#C3CCD5', u'--rule-strong:#AEB9C4'),
+    (u'--accent-soft:#E2EDF3', u'--accent-soft:#D6E4EC'),
+    (u'--cut-soft:#F7E8E8',   u'--cut-soft:#F2DCDC'),
+    (u'--keep-soft:#E3EEEA',  u'--keep-soft:#D7E7E1'),
+    (u'--swap-soft:#F5ECDD',  u'--swap-soft:#EFE2CE'),
+]
+for old, new in TONED:
+    head_bits = head_bits.replace(old, new)
+
 RESET = u"""
   *,*::before,*::after{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
