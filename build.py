@@ -14,6 +14,15 @@ head_bits, body = frag[:i], frag[i:]
 title = re.search(r'<title>([^<]*)</title>', head_bits).group(1)
 head_bits = head_bits.replace(u'<title>%s</title>' % title, u'')
 
+# Force light theme: the artifact stays theme-aware, the static page does not.
+# Strip the prefers-color-scheme dark block and the [data-theme="dark"] override.
+head_bits = re.sub(
+    r'\n  @media \(prefers-color-scheme: dark\) \{.*?\n  \}\n', u'\n',
+    head_bits, flags=re.S)
+head_bits = re.sub(
+    r'\n  :root\[data-theme="dark"\] \{.*?\n  \}\n', u'\n',
+    head_bits, flags=re.S)
+
 RESET = u"""
   *,*::before,*::after{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -35,8 +44,8 @@ page = u"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Evidence-graded 5-day training split for a fat-loss phase, with a rationale for every exercise.">
-<meta name="theme-color" content="#0F1418" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F5F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#F5F7F9">
+<meta name="color-scheme" content="light">
 <link rel="icon" href="%s">
 <link rel="apple-touch-icon" href="%s">
 <title>%s</title>
