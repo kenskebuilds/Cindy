@@ -1,0 +1,9 @@
+# This repository is PUBLIC and serves GitHub Pages from its root.
+# Anything committed here is world-readable. Never add secrets.
+.env
+.env.*
+*.key
+*.pem
+secrets*
+credentials*
+api-key*
