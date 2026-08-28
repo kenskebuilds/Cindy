@@ -46,14 +46,14 @@ for old, new in TONED:
 # Group the sections into four tabs. The plan lands first; everything that
 # explains or audits it sits behind the nav.
 TABS = [
-    (u'plan',      u'The Plan',   u'Warm-up, the seven days, weekly volume',
+    (u'plan',        u'The Plan',    u'Warm-up, the seven days, weekly volume',
      [u'rule', u'warmup', u'routine', u'weekly']),
-    (u'reasoning', u'Reasoning',  u'Why each exercise is in, and what turned out not to matter',
-     [u'selection', u'axial', u'settled']),
-    (u'fuel',      u'Fuel',       u'Calories, protein, cardio for fat loss',
-     [u'fatloss', u'nutrition']),
-    (u'record',    u'Record',     u'How to know it worked, and what changed',
-     [u'verify', u'corrections', u'ledger']),
+    (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
+     [u'loading', u'block', u'progress']),
+    (u'fuel',        u'Fuel',        u'Cardio placement, calories, protein',
+     [u'cardio', u'nutrition']),
+    (u'evidence',    u'Evidence',    u'Every citation graded, and the constraints checked',
+     [u'appendix', u'validation', u'practical']),
 ]
 
 masthead = re.search(r'  <header class="masthead">.*?\n  </header>\n', body, re.S).group(0)
@@ -189,7 +189,7 @@ page = u"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Evidence-graded 5-day training split for a fat-loss phase, with a rationale for every exercise.">
+<meta name="description" content="Citation-graded 5-day hypertrophy protocol for a lifter in a caloric deficit, built around a lumbar loading budget.">
 <meta name="theme-color" content="#F5F7F9">
 <meta name="color-scheme" content="light">
 <link rel="icon" href="%s">
@@ -213,15 +213,4 @@ io.open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write(
     u"User-agent: *\nDisallow: /\n")
 io.open(os.path.join(OUT, ".nojekyll"), "w", encoding="utf-8").write(u"")
 io.open(os.path.join(OUT, "README.md"), "w", encoding="utf-8").write(
-    u"# The Zero-Waste Protocol\n\n"
-    u"A 5-day training split built for a fat-loss phase, with every recommendation traced to "
-    u"peer-reviewed literature and the weak spots marked rather than smoothed over.\n\n"
-    u"Open `index.html`, or serve via GitHub Pages.\n\n"
-    u"## Notes\n\n"
-    u"- `robots.txt` and a `noindex` meta tag are included to discourage search indexing. "
-    u"They are not access control \u2014 anything on a public GitHub Pages site is publicly readable.\n"
-    u"- Single self-contained file. The only external request is Google Fonts.\n"
-    u"- General training and nutrition analysis, not medical advice.\n")
-
-print("built ->", OUT)
-print("index.html bytes:", os.path.getsize(os.path.join(OUT, "index.html")))
+    u"# The Deficit Hypertrophy Protocol\n\nA 5-day training split for a 40-year-old intermediate-advanced lifter in a caloric deficit. Primary outcome is hypertrophy; fat loss is secondary and handled by the diet. Every dose is traced to a citation, every citation is graded high/medium/low, and the plan is checked against nine explicit constraints in a validation report rather than asserted.\n\nOpen `index.html`, or serve via GitHub Pages.\n\n## Build\n\n    python build.py\n\nSource of truth is `src/protocol.html`. `build.py` wraps it into the standalone page, forces the light theme, and groups the twelve sections into four tabs. Every section must be assigned to a tab in `TABS` or the build aborts.\n\n## Notes\n\n- `robots.txt` and a `noindex` meta tag are included to discourage search indexing. They are not access control - anything on a public GitHub Pages site is publicly readable.\n- Single self-contained file. The only external request is Google Fonts.\n- General training and nutrition analysis, not medical advice.\n")
