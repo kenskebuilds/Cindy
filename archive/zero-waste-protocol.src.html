@@ -1,0 +1,725 @@
+<title>The Zero-Waste Protocol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+  :root {
+    --ground:#F5F7F9; --surface:#FFFFFF; --surface-2:#EDF1F4;
+    --ink:#131A22; --ink-2:#4A5563; --ink-3:#78838F;
+    --rule:#DCE2E8; --rule-strong:#C3CCD5;
+    --accent:#1B4D6B; --accent-soft:#E2EDF3;
+    --cut:#9E2A2B; --cut-soft:#F7E8E8;
+    --keep:#2F5D50; --keep-soft:#E3EEEA;
+    --swap:#855610; --swap-soft:#F5ECDD;
+    --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --measure:68ch; --pad:clamp(1.1rem,4vw,2.75rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0F1418; --surface:#161C22; --surface-2:#1D242B;
+      --ink:#E8EDF2; --ink-2:#A7B3BF; --ink-3:#7C8894;
+      --rule:#29323B; --rule-strong:#3A454F;
+      --accent:#77B7D8; --accent-soft:#15303E;
+      --cut:#E98785; --cut-soft:#331819;
+      --keep:#84C3AD; --keep-soft:#142621;
+      --swap:#DBAB5C; --swap-soft:#2A2113;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0F1418; --surface:#161C22; --surface-2:#1D242B;
+    --ink:#E8EDF2; --ink-2:#A7B3BF; --ink-3:#7C8894;
+    --rule:#29323B; --rule-strong:#3A454F;
+    --accent:#77B7D8; --accent-soft:#15303E;
+    --cut:#E98785; --cut-soft:#331819;
+    --keep:#84C3AD; --keep-soft:#142621;
+    --swap:#DBAB5C; --swap-soft:#2A2113;
+  }
+
+  * { box-sizing:border-box; }
+  body { background:var(--ground); color:var(--ink); font-family:var(--f-body); font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  .wrap { max-width:62rem; margin:0 auto; padding:0 var(--pad) 5rem; display:flex; flex-direction:column; gap:3.25rem; }
+  .col { max-width:var(--measure); }
+  p { margin:0 0 1.05em; } p:last-child { margin-bottom:0; }
+  strong { font-weight:600; color:var(--ink); }
+
+  .masthead { padding-top:clamp(2.5rem,7vw,4.5rem); display:flex; flex-direction:column; gap:1.5rem; }
+  .eyebrow { font-family:var(--f-mono); font-size:.7rem; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:0; }
+  h1 { font-family:var(--f-display); font-weight:700; font-size:clamp(2.4rem,7.5vw,4.1rem); line-height:1.02; letter-spacing:-.028em; text-wrap:balance; margin:0; }
+  .standfirst { font-size:clamp(1.06rem,2.3vw,1.28rem); line-height:1.55; color:var(--ink-2); max-width:56ch; margin:0; }
+  .vitals { display:flex; flex-wrap:wrap; gap:0 1.75rem; padding:.9rem 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); font-family:var(--f-mono); font-size:.755rem; letter-spacing:.03em; color:var(--ink-3); }
+  .vitals b { font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; }
+
+  section { display:flex; flex-direction:column; gap:1.4rem; scroll-margin-top:1.5rem; }
+  .sec-head { display:flex; flex-direction:column; gap:.4rem; border-top:2px solid var(--ink); padding-top:.85rem; }
+  .sec-num { font-family:var(--f-mono); font-size:.7rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+  h2 { font-family:var(--f-display); font-weight:600; font-size:clamp(1.5rem,3.6vw,2.05rem); line-height:1.12; letter-spacing:-.018em; text-wrap:balance; margin:0; }
+  h3 { font-family:var(--f-display); font-weight:600; font-size:1.09rem; letter-spacing:-.005em; line-height:1.3; text-wrap:balance; margin:.6rem 0 0; }
+
+  .thesis { border-left:3px solid var(--accent); padding:.1rem 0 .1rem 1.15rem; font-size:clamp(1.05rem,2.2vw,1.2rem); line-height:1.5; max-width:56ch; }
+  .note { background:var(--surface-2); border-radius:3px; padding:.95rem 1.15rem; font-size:.94rem; line-height:1.55; color:var(--ink-2); max-width:var(--measure); }
+  .note.is-warn { background:var(--cut-soft); color:var(--ink); }
+  .note.is-key { background:var(--accent-soft); color:var(--ink); border-left:3px solid var(--accent); border-radius:0 3px 3px 0; }
+  .note strong { color:var(--ink); }
+
+  .audit { display:flex; flex-direction:column; gap:.7rem; }
+  .item { display:grid; gap:.55rem; background:var(--surface); border:1px solid var(--rule); border-left-width:3px; border-left-color:var(--rule-strong); border-radius:2px; padding:1rem 1.15rem; }
+  .item.is-cut { border-left-color:var(--cut); }
+  .item.is-keep { border-left-color:var(--keep); }
+  .item.is-swap { border-left-color:var(--swap); }
+  .item-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem .8rem; }
+  .item-name { font-family:var(--f-display); font-weight:600; font-size:1.02rem; letter-spacing:-.005em; }
+  .chip { font-family:var(--f-mono); font-size:.645rem; font-weight:600; letter-spacing:.11em; text-transform:uppercase; padding:.24em .6em; border-radius:2px; white-space:nowrap; }
+  .chip.is-cut { background:var(--cut-soft); color:var(--cut); }
+  .chip.is-keep { background:var(--keep-soft); color:var(--keep); }
+  .chip.is-swap { background:var(--swap-soft); color:var(--swap); }
+  .item-why { font-size:.95rem; line-height:1.55; color:var(--ink-2); margin:0; }
+
+  .pair { display:flex; flex-direction:column; gap:.75rem; max-width:var(--measure); border-left:3px solid var(--accent); padding-left:1.15rem; }
+  .pair .app { margin:0; font-size:1.02rem; line-height:1.58; color:var(--ink); }
+  .evidence { border-top:1px solid var(--rule); padding-top:.6rem; }
+  .evidence summary { font-family:var(--f-mono); font-size:.62rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); cursor:pointer; list-style:none; display:flex; align-items:center; gap:.45rem; }
+  .evidence summary::-webkit-details-marker { display:none; }
+  .evidence summary::before { content:"+"; font-family:var(--f-mono); font-size:.9rem; line-height:1; width:.7em; }
+  .evidence[open] summary::before { content:"\2013"; }
+  .evidence summary:hover { color:var(--accent); }
+  .evidence summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .evidence p { margin:.65rem 0 0; font-size:.92rem; line-height:1.55; color:var(--ink-2); }
+
+  .settled { display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:.6rem; }
+  .settled-item { background:var(--surface); border:1px solid var(--rule); border-radius:2px; padding:.85rem .95rem; display:flex; flex-direction:column; gap:.35rem; }
+  .settled-q { font-family:var(--f-display); font-weight:600; font-size:.93rem; line-height:1.25; }
+  .settled-a { font-family:var(--f-mono); font-size:.62rem; font-weight:600; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); }
+  .settled-why { font-size:.85rem; line-height:1.45; color:var(--ink-2); margin:0; }
+
+  ul, ol { margin:0; padding-left:1.2rem; max-width:var(--measure); display:flex; flex-direction:column; gap:.55rem; }
+  li { padding-left:.2rem; } li::marker { color:var(--ink-3); }
+  ol li::marker { font-family:var(--f-mono); font-size:.85em; }
+
+  .scroller { overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--rule); border-radius:2px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:660px; font-size:.9rem; }
+  thead th { font-family:var(--f-mono); font-size:.645rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); text-align:left; padding:.72rem .9rem; border-bottom:1px solid var(--rule-strong); white-space:nowrap; }
+  tbody td { padding:.78rem .9rem; border-bottom:1px solid var(--rule); vertical-align:top; line-height:1.45; }
+  tbody tr:last-child td { border-bottom:0; }
+  .c-move { font-family:var(--f-display); font-weight:600; font-size:.93rem; min-width:13rem; }
+  .c-move small { display:block; font-family:var(--f-body); font-weight:400; font-style:italic; font-size:.85rem; color:var(--ink-3); margin-top:.15rem; }
+  .c-target { color:var(--ink-2); min-width:9.5rem; font-size:.87rem; }
+  .c-load, .c-rir { font-family:var(--f-mono); font-size:.82rem; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .c-load { font-weight:600; }
+  .c-rir { color:var(--ink-3); }
+  .c-cue { color:var(--ink-2); font-size:.88rem; min-width:16rem; }
+  .c-why { color:var(--ink-3); font-size:.85rem; min-width:19rem; border-left:1px solid var(--rule); }
+  .c-why strong { color:var(--ink-2); }
+  #routine table { min-width:980px; }
+  tr.is-cardio td { background:var(--accent-soft); }
+  tr.is-cardio .c-move { font-style:italic; color:var(--accent); }
+
+  .week { display:flex; flex-direction:column; gap:1.75rem; }
+  .session { display:flex; flex-direction:column; gap:.7rem; }
+  .session-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:.5rem .85rem; }
+  .session-day { font-family:var(--f-mono); font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--surface); background:var(--accent); padding:.28em .6em; border-radius:2px; }
+  .session-name { font-family:var(--f-display); font-weight:600; font-size:1.16rem; letter-spacing:-.01em; }
+  .session-vol { font-family:var(--f-mono); font-size:.72rem; color:var(--ink-3); font-variant-numeric:tabular-nums; }
+  .session-foot { font-size:.89rem; font-style:italic; color:var(--ink-3); max-width:var(--measure); margin:0; }
+
+  .ledger { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:.7rem; }
+  .ledger-col { background:var(--surface); border:1px solid var(--rule); border-radius:2px; padding:1rem 1.1rem; display:flex; flex-direction:column; gap:.6rem; }
+  .ledger-head { display:flex; align-items:baseline; gap:.5rem; font-family:var(--f-mono); font-size:.68rem; font-weight:600; letter-spacing:.11em; text-transform:uppercase; }
+  .ledger-head .n { font-size:1.5rem; letter-spacing:0; line-height:1; font-variant-numeric:tabular-nums; }
+  .ledger-col.is-cut .ledger-head { color:var(--cut); }
+  .ledger-col.is-swap .ledger-head { color:var(--swap); }
+  .ledger-col.is-keep .ledger-head { color:var(--keep); }
+  .ledger-col ul { padding-left:0; list-style:none; gap:.4rem; font-size:.89rem; line-height:1.45; color:var(--ink-2); }
+  .ledger-col li { padding-left:0; }
+
+  footer { border-top:1px solid var(--rule); padding-top:1.25rem; font-family:var(--f-mono); font-size:.735rem; line-height:1.6; color:var(--ink-3); max-width:var(--measure); }
+  a { color:var(--accent); }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+  @media (max-width:40rem) { body { font-size:16px; } .vitals { gap:0 1.1rem; font-size:.7rem; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Revision 4 · Fat-Loss Phase · Age 40</p>
+    <h1>The Zero-Waste Protocol</h1>
+    <p class="standfirst">A 5-day split built for a cut, with every directive traced to the literature — and an honest account of which questions turned out not to matter at all.</p>
+    <div class="vitals">
+      <span>Mass <b>75 kg</b></span>
+      <span>Body fat <b>20%+</b></span>
+      <span>Calories <b>2,300–2,400</b></span>
+      <span>Protein <b>180 g</b></span>
+      <span>Deficit cap <b>500 kcal</b></span>
+      <span>Warm-up <b>6–10 min</b></span>
+      <span>Volume <b>hold, don't cut</b></span>
+    </div>
+  </header>
+
+  <section id="rule">
+    <div class="sec-head">
+      <span class="sec-num">The one rule</span>
+      <h2>In a cut, holding volume beats every other decision</h2>
+    </div>
+    <div class="note is-key"><strong>Roth, Schoenfeld &amp; Behringer (2022, <em>Eur J Appl Physiol</em>)</strong> reviewed 15 studies of resistance-trained athletes in caloric restriction and found that keeping <strong>at least 10 weekly sets per muscle group — and not cutting volume as calories drop</strong> — was what tracked with little-to-no lean mass loss. Your instinct in a deficit will be to train less because you feel worse. That instinct is the thing most likely to cost you muscle.</div>
+    <div class="col">
+      <p class="thesis">This single variable outweighs every exercise-selection decision in this document combined. Grip width, cable versus dumbbell, which machine, what order — all of it is rounding error next to weekly sets, effort, and load held over months.</p>
+      <p>Which is worth saying plainly, because most of what you asked about turned out not to matter. The research below is organised so the things that <em>do</em> matter come first, and the settled questions are collapsed into a single block you can stop thinking about.</p>
+    </div>
+  </section>
+
+  <section id="settled">
+    <div class="sec-head">
+      <span class="sec-num">01 — Settled</span>
+      <h2>Six questions you can stop asking</h2>
+    </div>
+    <div class="col">
+      <p>Each of these was tested properly and came back null. Note the pattern: <strong>the strongest study in this batch is a negative result whose authors predicted the opposite.</strong></p>
+    </div>
+    <div class="settled">
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Pulldown grip width &amp; orientation</span>
+        <p class="settled-why">Buonsenso (2025), <strong>40 trained men, seven variants</strong> — no significant difference in lat activation across any grip type, width or trunk angle. Andersen (2014) and Lusk (2010) agree. "Wide grip for lats" outlived its evidence.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Iso-lateral vs bilateral</span>
+        <p class="settled-why">Kassiano (2025, <em>Sports Medicine</em>, 9-study meta-analysis): <strong>no hypertrophy difference</strong> (ES −0.21). Strength follows test specificity. Choose iso-lateral for bracing and side-to-side balance, not growth.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Lateral raise: cable vs dumbbell vs machine</span>
+        <p class="settled-why">Larsen (2025, <em>Front Physiol</em>), 24 trained, within-subject, ROM-matched. The authors <strong>hypothesised cables would win</strong> and got moderate-to-extreme Bayesian support for the null. Delt thickness rose 3.3–4.6% either way.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Machine vs free weight</span>
+        <p class="settled-why">Haugen (2023), <strong>13 studies, n=1,016</strong> — equal for hypertrophy, dynamic strength, isometric strength and jump. Only strength <em>testing</em> is modality-specific, and you have no free-weight test to be specific to.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Exercise order</span>
+        <p class="settled-why">Nunes (2021, <em>Eur J Sport Sci</em>, 11-study meta-analysis): <strong>no effect of order on hypertrophy.</strong> Strength gains favour whatever sits first. And <strong>"back before chest" has no evidence base at all</strong> — it traces to gym-floor copy.</p>
+      </div>
+      <div class="settled-item">
+        <span class="settled-a">No difference</span>
+        <span class="settled-q">Where the fly's resistance peaks</span>
+        <p class="settled-why">The one direct test of ascending versus descending resistance profile in a chest fly found <strong>~18% vs ~20% pec growth, not significantly different.</strong> Selecting exercises by resistance curve is currently an aesthetic preference, not a method.</p>
+      </div>
+    </div>
+    <div class="note"><strong>A caveat that limits all six.</strong> Most of these null findings come from untrained subjects, who grow from almost anything — which makes "no difference" weaker evidence than it looks for a trained 40-year-old. The genuinely trained-subject evidence here is about five studies deep. Treat these as "stop optimising," not as proven equivalence.</div>
+  </section>
+
+  <section id="selection">
+    <div class="sec-head">
+      <span class="sec-num">02 — Exercise selection</span>
+      <h2>The three that actually change something</h2>
+    </div>
+
+    <h3>Day 6 does not need a biceps exercise</h3>
+    <div class="pair">
+      <p class="app">Keep both curls on Day 1. <strong>Add nothing to Day 6.</strong> Under fractional counting your biceps already receive 8–12 weekly sets from the pulling before any curl. In a deficit, an unspent recovery slot is not a wasted one.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>Two findings that look contradictory but aren't. <strong>Mannarino (2021, <em>JSCR</em>, contralateral design)</strong> found elbow flexor hypertrophy of <strong>+11.1% from a biceps curl versus +5.2% from a dumbbell row</strong> — so direct curls genuinely earn their place, and "compounds are enough for arms" is wrong. But <strong>de França (2015, <em>Appl Physiol Nutr Metab</em>, trained men)</strong> found that adding isolation <em>on top of</em> a program that already has it produces no additional size or strength. Gentil (2013) and Bezerra (2018) agree. And the study most often cited on this — Rogers (2000), showing +6.6% vs +6.5% arm circumference — is <strong>a conference abstract that never became a paper, measuring with a tape</strong>. It should carry almost no weight.</p>
+      </details>
+    </div>
+
+    <h3>The Super Incline Press is a shoulder press</h3>
+    <div class="pair">
+      <p class="app">Keep the incline at <strong>~30°, 45° at the outside.</strong> Above that you are buying anterior deltoid you already train and paying for it in pec stimulus. If you want a shoulder press, program a shoulder press — you already have one on Day 6.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p><strong>Rodríguez-Ridao (2020, <em>IJERPH</em>, 30 trained subjects, five bench angles)</strong> found upper (clavicular) pec activation <strong>peaks at 30°</strong>, with anterior deltoid climbing steadily as the bench gets steeper and mid/lower pec output falling. Lauver (2016) agrees on 30–45°. On the hypertrophy side, Chaves (2020, 8 weeks, sets equated) found upper-pec thickness increased most in the incline-only group — though in untrained subjects at once weekly. <strong>No evidence supports 60–70° for chest.</strong> The manufacturer's own copy says the machine "closely mimics the mechanics of a front military press."</p>
+      </details>
+    </div>
+
+    <h3>Keep the lat pulldown — and it's the better choice for you specifically</h3>
+    <div class="pair">
+      <p class="app">Keep it, and keep it for the right reason: it is the <em>better</em> option given your complaint, not a compromise. Doma's erector finding is the one result that maps directly onto your problem. <strong>This also means the Day 6 pull-up is working against you</strong> — it's been swapped for a second pulldown variation below. If pull-ups have never aggravated your back, put them back; you're the evidence that matters on that one.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>First, the honest part: <strong>no hypertrophy trial comparing pulldown to pull-up exists.</strong> Anyone calling the pulldown "one of the best vertical pulls" is extrapolating from acute EMG, which <strong>Vigotsky (2018, 2022, <em>Sports Medicine</em>) shows is not a validated predictor of hypertrophy.</strong> What does exist: Doma (2013, <em>Sports Biomechanics</em>) found <strong>no difference in latissimus activation</strong> between chin-up and pulldown — but chin-ups produced greater biceps <em>and greater erector spinae</em> activity. The only variant with real support to avoid is behind-the-neck (Sperandei 2009).</p>
+      </details>
+    </div>
+
+    <h3>Setting up the pulldown — the seven-second checklist</h3>
+    <div class="col">
+      <p>You asked for setup instructions rather than a single cue, and that's the right instinct: on this movement the setup <em>is</em> the technique. Run this before every set, not just the first.</p>
+    </div>
+    <ol class="col">
+      <li><strong>Thigh pad tight — no daylight.</strong> If your hips can lift even slightly, the load pulls you up and your erectors spend the set fighting it. This is the single biggest contributor to your soreness.</li>
+      <li><strong>Chest on the pad before rep one, and it stays there.</strong> The set ends when the chest leaves it, regardless of how many reps you had planned.</li>
+      <li><strong>Exhale fully and let the ribs drop.</strong> This kills the arch before it can start. Do it once, at the top, before you pull.</li>
+      <li><strong>Set the trunk angle once — about 10–15° back — and never change it.</strong> Every degree of rep-to-rep drift is erector work you didn't want to buy.</li>
+      <li><strong>Brace light, around 10–15%.</strong> Maximal bracing here adds spinal compression to buy stability you don't need.</li>
+      <li><strong>The mental model: drive the elbow down toward your back pocket.</strong> Not "pull the bar down" — the bar coming down is a consequence, not the intention. Think about where the elbow finishes.</li>
+      <li><strong>End the set at the rep where the torso wants to move</strong> — not the rep where the lats fail. That rep adds erector fatigue and nothing else.</li>
+    </ol>
+
+    <div class="note is-key"><strong>Correction, from the gym floor.</strong> I read the manufacturer's page three ways and concluded the Iso-Lateral Front Lat Pulldown had only a thigh hold-down. It has a <strong>chest pad</strong> — confirmed in person, which beats a spec sheet. That upgrades the machine materially: it is now a genuinely <em>torso-supported</em> vertical pull, which is the exact configuration Fenwick found produced the highest lat activation and the lowest spine load simultaneously. Combined with the chest-padded Iso-Lateral Row, <strong>both of the exercises that were giving you erector fatigue now have fully supported versions available.</strong> Use the pad, don't just sit near it.</div>
+
+    <h3>Core: one movement, loaded — not more exercises</h3>
+    <div class="pair">
+      <p class="app">So one direct movement is the right number, and you have it. But <strong>load it</strong>: 3 × 8–12 with a dumbbell between the feet, progressing load rather than reps. Bodyweight knee raises for 15 reps is submaximal for an intermediate lifter. Moved to Day 2 — on Day 5 it was the fifth exercise, getting whatever survived the hack squats.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>The usual reassurance — "the compounds train your core" — fails on its own terms in <em>your</em> program. Hamlyn (2007) found <strong>no significant abdominal activation difference</strong> between 80% 1RM squats and deadlifts and bodyweight exercises; compounds are an <em>erector</em> stimulus, not an abdominal one. And Clark (2019) compared back squat to <strong>hack squat</strong> directly, finding the hack squat produced significantly less trunk activation across nearly every muscle and phase. Your program is deliberately built from hack squats, leg presses and machine presses — engineered to minimise trunk demand.</p>
+      </details>
+    </div>
+    <div class="note"><strong>The optional four minutes that genuinely earn their place.</strong> Your actual reported problem is compensatory lumbar <em>extension</em> under load — that's an anti-extension demand, not a flexion-strength one. Escamilla (2010) found the ab wheel rollout produces the highest abdominal and oblique activity in the literature <strong>while minimising lumbar paraspinal activation</strong> — the exact inverse of your failure mode. Two sets from the knees, partial range, at session end. Skip it if you only care about abs showing, because that is a body-fat question and nothing else: Kostek (2007, n=104, MRI) found <strong>spot reduction does not occur</strong>, and Vispute ran six weeks of seven ab exercises five days a week with <strong>no change in abdominal fat or waist girth</strong>.</div>
+    <div class="note"><strong>And core work is not back insurance.</strong> Smith (2014, 29 trials) found strong evidence that stabilisation exercise is <strong>no better than any other active exercise</strong> long-term. Lauersen (2014) found strength training drove a ~68% injury reduction — core and proprioceptive work were not the effective ingredient. One more correction while we're here: Saraceni (2020, <em>JOSPT</em>) found lumbar flexion during lifting is <strong>not</strong> a risk factor for back pain, and people <em>with</em> back pain flexed about 6° less. Don't take a flexion phobia away from this document — the defensible claim is narrow and specific, and it's about held positions in your first waking hour.</div>
+
+    <div class="note"><strong>Two things with no peer-reviewed support of any kind</strong>, despite confident marketing: the Hammer Strength <strong>converging arc</strong> (the pec's transverse-adduction function is real anatomy, but "therefore the arc grows more pec" is untested inference), and <strong>"train back before chest."</strong> Both trace to manufacturer copy and gym-floor lore. Use the machines because they're comfortable and well-built, which they are.</div>
+  </section>
+
+  <section id="axial">
+    <div class="sec-head">
+      <span class="sec-num">03 — Axial loading</span>
+      <h2>Where the lumbar fatigue comes from</h2>
+    </div>
+
+    <div class="pair">
+      <p class="app">Chest-supported rowing is your <strong>primary</strong> horizontal pull. It won on stimulus <em>and</em> spine load simultaneously — not a trade.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>Fenwick, Brown &amp; McGill (2009, <em>JSCR</em>) found the <strong>supported row produced the highest lat, upper back and hip extensor activation while producing the lowest lumbar erector activation and lowest spine load.</strong> The bent-over row produced the highest spine load. The standing one-arm cable row produced the greatest axial rotation — which matters because Marras (1993, <em>Spine</em>, >400 industrial jobs) found <strong>trunk asymmetry and velocity</strong> to be independent risk contributors with predictive power more than three times that of standard lifting guidelines.</p>
+      </details>
+    </div>
+
+    <div class="pair">
+      <p class="app">Your soreness is almost certainly <strong>isometric trunk-position work.</strong> Anchor rather than deload — and with the chest pad confirmed on both the pulldown and the row, <strong>the equipment now does most of the anchoring for you.</strong> Chest on the pad, thighs under the hold-down, pelvis neutral, light brace, trunk angle never changing rep to rep. <strong>Test it in week one at the same load.</strong> If the soreness resolves, confirmed. If it doesn't, this directive is wrong and we look elsewhere — and the remaining suspect becomes the pressing, not the pulling.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>⚠️ <strong>Mechanistic reasoning, not measurement.</strong> No study measuring lumbar load during lat pulldown or seated cable row was found. What is documented: torso swing shifts emphasis off the lats onto the erectors, and grip variations don't meaningfully change lat activation — so the lay-back buys nothing on the prime mover.</p>
+      </details>
+    </div>
+
+    <div class="pair">
+      <p class="app">Mechanism, dose-time curve and a sham-controlled RCT all agree — very little in strength coaching is supported this well, and Tyrrell's 54% is why "one hour" is the right interval rather than an arbitrary one. <strong>Wake 60–90 minutes before training, not 30, and spend it upright and moving.</strong> Put any hinge at the end of the session. No static flexion stretching in the first hour — five minutes of flexion creep cuts bending resistance 42% (Adams &amp; Dolan 1996). A morning toe-touch before hinging is exactly backwards.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>Three lines converge on morning timing. Adams, Dolan &amp; Hutton (1987, <em>Spine</em>): early-morning forward bending raises bending stress <strong>~300% in the disc</strong> (⚠️ in-vitro cadaveric creep). Tyrrell (1985, <em>Spine</em>), by stadiometry: <strong>54% of the entire day's stature loss happens in the first hour after rising.</strong> And Snook (1998, <em>Spine</em>) — an <strong>18-month sham-controlled RCT in 85 chronic back-pain subjects</strong> — found restricting early-morning lumbar flexion cut <strong>a 33% reduction in pain intensity (95% CI 11–55%)</strong> against a sham group given six exercises known to be ineffective.</p>
+      </details>
+    </div>
+
+    <div class="pair">
+      <p class="app"><strong>Seated leg curl is your primary hamstring builder.</strong> Keep the RDL for hip-extension strength at moderate load, 2–3 RIR, placed last in the session. That resolves the 06:30 timing conflict without losing hamstring stimulus.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>Maeo (2021, <em>MSSE</em>), 12-week <strong>within-subject</strong> trial: <strong>seated</strong> leg curl (hip flexed, hamstrings lengthened) produced <strong>greater hypertrophy in all three biarticular hamstrings</strong> than prone. A direct controlled test of the exact mechanism the RDL is prized for — with zero spinal flexion moment.</p>
+      </details>
+    </div>
+
+    <div class="note"><strong>An inversion worth absorbing.</strong> McGill (1991) found anterior shear rose from 492 to 736 N as load increased while <strong>shear borne by the facets and disc stayed roughly constant at ~200 N</strong> — the musculature absorbs the increment. The erectors aren't a liability to minimise; they're what keeps shear off the passive structures. The goal is <em>selective offloading during pulling and pressing</em>, not detraining them. Which is why cutting the 45° back extension is a volume-redundancy call, not a safety one — and why dropping it won't make you weaker.</div>
+
+    <div class="note"><strong>Two cues that don't survive scrutiny.</strong> van Dieën (1999) found spinal compression <strong>not significantly different between stoop and squat lifting</strong> — "squat, don't stoop" has no load-reduction basis. Saraceni (2020, <em>JOSPT</em> meta-analysis) found low-quality evidence that greater lumbar flexion during lifting is <strong>not</strong> a risk factor for back pain onset. What survives: <strong>keep the load close</strong> (the only cue with unambiguous mechanical support), <strong>move slowly and symmetrically</strong>, and hold a consistent actively-controlled position.</div>
+  </section>
+
+  <section id="fatloss">
+    <div class="sec-head">
+      <span class="sec-num">04 — Fat loss</span>
+      <h2>Cardio is your third lever, not your first</h2>
+    </div>
+
+    <div class="pair">
+      <p class="app">Your <strong>five lifting sessions plus a controlled deficit are the fat-loss programme.</strong> Cardio's job is to keep the deficit small enough to protect muscle, and to buy cardiorespiratory fitness — both excellent reasons. "Burning fat" is not one of them.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p><strong>Lopez (2022, <em>Obesity Reviews</em>, 114 trials, 4,184 participants)</strong> found <strong>resistance training plus caloric restriction was the single most effective combination for fat loss</strong> — −3.8% body fat, −5.3 kg fat mass — ahead of every aerobic-inclusive arm, while also being best for lean mass (+0.8 kg). And <strong>Johns (2014, 8 direct comparisons, 1,022 participants)</strong> found adding exercise to a diet programme produced <strong>no significant additional weight loss at 3–6 months</strong> (−0.62 kg, CI crossing zero). Wewege (2022, 58 studies) shows resistance training independently reduces body fat percentage, fat mass and visceral fat.</p>
+      </details>
+    </div>
+
+    <h3>Higher heart rate or Zone 2? Neither — and here's the arithmetic</h3>
+    <div class="pair">
+      <p class="app">Prescribe cardio by <strong>duration, not by zone</strong>. You are buying weekly energy expenditure and aerobic base at low recovery cost. Don't raise the heart rate believing it burns more fat; don't lower it believing the same.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>Peak fat oxidation is <strong>~0.47 g/min at ~64% VO₂max</strong> (Achten 2002). Forty-five minutes at exactly the right intensity oxidises about 21 g of fat — roughly 190 kcal, against 7,700 kcal in a kilogram. Every outcome-first meta-analysis agrees intensity doesn't matter: Keating (2017, 31 studies, 873 participants) found no difference on any body-fat measure, and where HIIT had <em>lower</em> time commitment, results favoured steady-state. Sultana (2019, 47 studies) is sharpest: <strong>low-volume HIIT didn't significantly reduce fat mass at all</strong> (ES −0.129) while still improving fitness.</p>
+      </details>
+    </div>
+
+    <div class="note is-warn"><strong>Two numbers that run opposite to the marketing.</strong> EPOC — the "afterburn" — is <strong>tens of kilocalories</strong>, roughly a banana, and it is the most oversold concept in commercial fitness. Meanwhile the effect nobody sells you, <strong>~28% energy compensation</strong> (Careau 2021, n=1,754, doubly-labelled water), is about ten times larger and runs the other way: only ~72% of exercise calories show up in daily expenditure. <strong>Discount whatever your watch says by roughly a quarter before eating any of it back.</strong></div>
+
+    <h3>Fasted training does what it claims and none of what it promises</h3>
+    <div class="pair">
+      <p class="app">Lift fasted because it suits 06:30. That's a legitimate reason. Just not the fat-loss one. Black coffee beforehand is fine and performance-motivated only — and caffeine's fat-oxidation effect is <strong>smaller in trained people</strong> (Collado-Mateo 2020).</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>Fasted exercise genuinely raises fat oxidation during the session — Vieira (2016, <em>Br J Nutr</em>, 27 trials) confirms it robustly. It changes nothing about body composition: Schoenfeld (2014) ran the matched-hypocaloric test and found <strong>no between-group difference on any outcome.</strong> Separately, a resistance session expends roughly 200–350 kcal against 400–540 for a Zone 2 session, so lifting fasted does not substitute for cardio — the gap is in total energy, not substrate.</p>
+      </details>
+    </div>
+
+    <h3>The harder run: get the stimulus, skip the risk</h3>
+    <div class="pair">
+      <p class="app">Don't turn the 5 km into a sustained hard effort while cutting. Instead, once weekly at most: <strong>5 × 3 min at 150–165 bpm with 2–3 min easy between</strong>, after a 10-minute warm-up. Same VO₂max stimulus, a fraction of the eccentric load. <strong>Or do those intervals on the bike</strong> — near-zero eccentric load, entire cardiovascular benefit retained. Drop it in any week where sleep, recovery or joints are poor.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>At ~180 max, 150–165 bpm is 83–92% — threshold to VO₂max work, a <strong>two-zone jump</strong>, not a slightly harder Zone 2. Interference isn't the concern: Fyfe (2016) is titled, near enough, "endurance training intensity does not mediate interference" — the moderators are volume and frequency, not intensity. The concern is that a hard, high-impact, eccentrically-loaded run performed under-fuelled is the highest injury-risk item in your week; low energy availability affects ~49% of male athletes with consistent evidence of elevated bone stress injury risk. Against that, the case <em>for</em> intensity is real: Mandsager (2018, <em>JAMA Netw Open</em>, 122,007 patients) found fitness predicts mortality with <strong>no observed upper limit of benefit.</strong></p>
+      </details>
+    </div>
+
+    <div class="note is-key"><strong>The lever nobody mentions.</strong> Given ~28% compensation, the most reliable exercise-side variable isn't cardio sessions at all — it's daily steps. <strong>Set a floor of 8,000–10,000/day and monitor it.</strong> The compensation literature predicts your unconscious activity will drift downward as the deficit accumulates, and falling NEAT will quietly eat your Zone 2 sessions without you noticing.</div>
+  </section>
+
+  <section id="nutrition">
+    <div class="sec-head">
+      <span class="sec-num">05 — Nutrition</span>
+      <h2>Set the deficit, then stop fiddling</h2>
+    </div>
+
+    <div class="note is-warn"><strong>⚠️ The deficit ceiling is now properly sourced.</strong> Murphy &amp; Koehler (2022, <em>Scand J Med Sci Sports</em>) meta-regression found an energy deficit impaired lean-mass gains (ES −0.57) with <strong>~500 kcal/day the point at which lean-mass gain was abolished</strong> — strength was preserved either way. At 75 kg and 20%+ body fat, maintenance is roughly 2,550–2,700 kcal. <strong>Target 2,300–2,400 and no lower.</strong></div>
+
+    <div class="col">
+      <p>Aim for <strong>0.5–0.7% of body weight per week</strong> (~0.4–0.5 kg). Garthe (2011, RCT in elite athletes) found the slower rate preserved lean mass where 1.4%/week did not. At your body fat you have room to run this 12–16 weeks.</p>
+      <p><strong>Macros:</strong> protein <strong>180 g</strong> (Helms 2014: 1.8–2.7 g/kg during energy restriction), fat <strong>60–70 g</strong>, carbohydrate <strong>240–270 g</strong>. Reassess every three weeks against the four-week rolling weight average, adjusting ±150 kcal.</p>
+    </div>
+
+    <h3>Stop doing these</h3>
+    <div class="audit">
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">The second creatine dose</span><span class="chip is-cut">Halve the cost</span></div>
+        <p class="item-why">You take 10 g on lifting days. Hultman (1996, direct muscle biopsy) showed saturation is <strong>held on 2 g/day</strong>, and a 2024 dose-response meta found no dose-response above ~5 g/day. One 5 g dose, any time.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Pairing creatine with carbs on purpose</span><span class="chip is-cut">Loading-phase artefact</span></div>
+        <p class="item-why">Green (1996) and Steenge (2000) both ran <strong>5-day loading at 20 g/day in creatine-naive men</strong> — the famous 60% figure is an advantage in <em>filling an empty tank</em>. Once saturated, extra insulin has nothing left to push in.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">The ¼ tsp salt before lifting</span><span class="chip is-cut">Unsupported</span></div>
+        <p class="item-why">ACSM's fluid stand recommends sodium for exercise <strong>beyond one hour</strong>, and every retention study is in dehydrated or heat-stressed subjects. Keep it for the run in heat. Drink the water regardless.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Collagen</span><span class="chip is-cut">I recommended this — cancelled</span></div>
+        <p class="item-why">Shaw (2017) is <strong>n=8</strong> measuring serum PINP, a marker predominantly reflecting <strong>bone</strong> collagen, with the tendon data from engineered ligaments in a dish. Aussieker (2023, <em>MSSE</em>) measured connective tissue protein synthesis directly with tracers: <strong>collagen did nothing.</strong></p>
+      </div>
+    </div>
+
+    <h3>Keep these</h3>
+    <ul class="col">
+      <li><strong>The 50 g shake.</strong> Trommelen (2023, <em>Cell Reports Medicine</em>, quadruple-tracer) fed 100 g versus 25 g and found the large bolus produced a <strong>larger and &gt;12 h longer</strong> anabolic response. "Only 25–30 g can be used" was an artefact of studies that stopped measuring at five hours.</li>
+      <li><strong>The 08:00 timing.</strong> Schoenfeld, Aragon &amp; Krieger (2013) found the protein-timing effect <strong>disappeared once total protein was controlled.</strong> There is no window to miss.</li>
+      <li><strong>The two dates pre-lift</strong> — but know what they do. King (2022, 21 studies): carbohydrate helps only in sessions over 45 minutes. An overnight fast changes muscle glycogen <strong>&lt;3%</strong>. Naharudin (2020) showed a <strong>29 kcal sham breakfast reproduced the entire benefit.</strong> It's a gastric-fill cue. Don't scale it up — and in a deficit those calories now count.</li>
+      <li><strong>Four protein feedings of ~45 g</strong>, one at 21:00–22:00. Don't <em>add</em> a pre-sleep shake — Joy (2018), the one trial matching total protein and only moving casein to night, found no difference. Redistribute.</li>
+      <li><strong>Get 25(OH)D measured</strong> before supplementing. Sist (2023, 11 RCTs) found an effect only when baseline was low. Omega-3 at 1–2 g/day is defensible on cardiovascular grounds only.</li>
+    </ul>
+  </section>
+
+  <section id="warmup">
+    <div class="sec-head">
+      <span class="sec-num">06 — Warm-up</span>
+      <h2>Six minutes upper, ten minutes lower</h2>
+    </div>
+    <div class="note is-warn"><strong>Citation audit — one figure corrected.</strong> This section's 17 citations were re-audited after the research that produced them was interrupted. All 17 were located, but three carry caveats worth knowing. <strong>A Snook (1998) figure previously quoted here as "pain days cut 23% versus 2% in sham" was not verifiable and has been removed</strong> — the paper's confirmed result is a 33% reduction in pain intensity (95% CI 11–55%). The conclusion is unchanged; the number was wrong. Separately: <strong>Enes (2025)</strong>, the most load-bearing citation here, was read as a preprint because the published version was inaccessible. <strong>Oliva (2026)</strong> is a self-described pilot whose sample size could not be obtained — it should not carry weight alone. And the RAMP protocol, widely cited in coaching, is published in a non-peer-reviewed trade magazine and is deliberately not cited as evidence anywhere in this document.</div>
+    <div class="col">
+      <p class="thesis">Enes (2025) compared two warm-up sets, one warm-up set, and <strong>none at all</strong> in 29 trained lifters at 10-rep loads. Differences were "negligible to small." The authors recommend skipping the specific warm-up for time efficiency.</p>
+      <p>Ribeiro (2014) found the same thing at 80% 1RM — no difference in total reps or fatigue across four warm-up conditions. So the honest starting position is that the conventional fifteen-minute ritual has no evidence demanding it, and your instinct about wasted time is closer to the data than the ritual is.</p>
+      <p>Two things stop it being zero. Abad (2011) found adding a general warm-up raised leg-press 1RM 8.4% over a specific warm-up alone, and Barroso (2013) got +3% from a <em>low</em>-intensity general warm-up. And separately, the morning-spine evidence — which is about risk, not performance.</p>
+    </div>
+
+    <h3>Upper days — Day 1, 3, 6</h3>
+    <div class="scroller"><table>
+      <thead><tr><th>Clock</th><th>Do this</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="c-load">0:00–3:00</td><td class="c-move">3 min easy bike or row<small>conversational, RPE 3–4 — not a workout</small></td><td class="c-cue">Barroso (2013) found long, <em>moderate</em>-intensity warm-ups cost 4% of 1RM. Easy means easy.</td></tr>
+        <tr><td class="c-load">3:00–3:45</td><td class="c-move">45 s movement<small>10 arm swings across the body, 10 overhead reaches, 10 cable or band pull-aparts</small></td><td class="c-cue">Dynamic work is worth about +1.3% (Behm 2016). Movement only — no held positions.</td></tr>
+        <tr><td class="c-load">3:45 →</td><td class="c-move">Straight into ramping sets of exercise 1</td><td class="c-cue">No separate phase. Oliva (2026) found a general mobility warm-up <em>reduced</em> squat force 3.8% where specific warm-up didn't.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Lower days — Day 2, 5</h3>
+    <div class="scroller"><table>
+      <thead><tr><th>Clock</th><th>Do this</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="c-load">0:00–4:00</td><td class="c-move">4 min easy bike<small>bike, not rower</small></td><td class="c-cue">The rowing catch position is repeated loaded lumbar flexion — in your highest-risk hour. Use the bike on lower days.</td></tr>
+        <tr><td class="c-load">4:00–5:30</td><td class="c-move">90 s movement, all neutral-spine<small>10 bodyweight squats, 10 leg swings front-to-back with a braced torso, 10 hip circles, 10 glute bridges</small></td><td class="c-cue">Same rationale — moving, not holding.</td></tr>
+        <tr><td class="c-load">5:30 →</td><td class="c-move">Ramping sets of exercise 1</td><td class="c-cue">—</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Warm-up sets — exact numbers</h3>
+    <div class="col">
+      <p>Percentages are of your <strong>first working set's load</strong>, not of your 1RM.</p>
+    </div>
+    <div class="scroller"><table>
+      <thead><tr><th>Exercise</th><th>Ramp</th><th>Cost</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="c-move">Heavy machine press<small>Day 3, first exercise</small></td><td class="c-cue">50% × 8, rest 45 s<br>75–80% × 3, rest 60–90 s<br>→ working set</td><td class="c-load">~2.5 min</td><td class="c-cue">Two sets is the ceiling. A third buys nothing measurable.</td></tr>
+        <tr><td class="c-move">Hack squat<small>Day 5, first exercise</small></td><td class="c-cue">40% × 8, rest 45 s<br>65% × 5, rest 60 s<br>85% × 3, rest 90 s<br>→ working set</td><td class="c-load">~4.5 min</td><td class="c-cue">The extra set here is <strong>reasoned convention, not evidence</strong> — no study has compared warm-up set counts between exercises. Never a fourth.</td></tr>
+        <tr><td class="c-move">Romanian deadlift<small>Day 2, last exercise</small></td><td class="c-cue">70% × 5, rest 90 s<br>→ working set</td><td class="c-load">~2 min</td><td class="c-cue">One set. Your posterior chain is already warm and you're 75+ minutes past waking.</td></tr>
+        <tr><td class="c-move">Lat pulldown<small>Day 1 &amp; 6, first exercise</small></td><td class="c-cue">50% × 8, rest 45 s<br><em>optionally</em> 75% × 3<br>→ working set</td><td class="c-load">~1–2 min</td><td class="c-cue">One is enough; the second exists only because it's the first thing you do. At 8–10 reps you're far from maximal — Enes (2025) tested exactly this rep range and found no warm-up at all performed comparably to two sets. ⚠️ Read as a preprint; the published version wasn't accessible.</td></tr>
+        <tr><td class="c-move">Second exercise for the same muscle<small>the row after pulldowns, incline press after chest press</small></td><td class="c-cue"><strong>None.</strong> Straight into the working set</td><td class="c-load">0</td><td class="c-cue">The previous exercise <em>was</em> the warm-up. If set 1 feels off, that set becomes the ramp — don't plan one.</td></tr>
+        <tr><td class="c-move">Isolation work<small>lateral raise, curls, pec deck, leg extension, face pull</small></td><td class="c-cue">~50% × 8–10, brisk<br>→ working set</td><td class="c-load">0–45 s</td><td class="c-cue"><strong>Zero</strong> whenever it follows a compound that already trained that muscle — so the pec deck on Day 3 and both curls on Day 1 need none at all.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="col">
+      <p><strong>Total: about 38 minutes a week</strong> — roughly 5–8% of your training time, and the warm-up sets inside that are themselves stimulus. Genuinely "spent" time is nearer 3–4 minutes a session.</p>
+    </div>
+
+    <h3>Stretching — the rule is not what you were told</h3>
+    <div class="pair">
+      <p class="app">If there's one stretch you've always done and it makes you feel ready, keep it — under 45 seconds, and never as your whole warm-up. But see the ban below, which is a different issue entirely.</p>
+      <details class="evidence"><summary>The evidence behind this</summary>
+        <p>The blanket "never static stretch before lifting" rule is roughly a decade out of date. Kay &amp; Blazevich (2012, <em>MSSE</em>, <strong>106 studies</strong>) found stretches <strong>under 30 s cost 1.1%</strong> — trivial — and 30–45 s cost 1.9%, non-significant. Only <strong>60 s or more</strong> produced meaningful decrement. Simic (2013, 104 studies) agrees the smallest effects are at ≤45 s. The impairment is real but <strong>duration-gated at about a minute per muscle</strong>, and most gym stretching is 20–30 s.</p>
+      </details>
+    </div>
+
+    <div class="note is-warn"><strong>⚠️ Banned before roughly 07:15, and this one isn't about wasted time.</strong> No <strong>held</strong> lumbar-flexion stretches in your first waking hour: toe touches, standing forward folds, seated hamstring stretches, child's pose, or any sustained rounded-back foam-rolling position. Adams &amp; Dolan (1996) found <strong>five minutes of sustained flexion cut the spine's bending resistance by 42%</strong> across 45 cadaveric segments, and Snook's sham-controlled RCT found restricting early-morning lumbar flexion produced a <strong>33% reduction in pain intensity</strong>. Note the mechanism is <em>duration-dependent creep</em>, not flexion itself — a controlled RDL is a different exposure from a 60-second hold, and rapid flexion actually <em>increased</em> bending resistance 10–15%. It's the held position to eliminate, not hip hinging.</div>
+
+    <div class="note"><strong>The thing that matters more than any of this:</strong> if you sit hunched in a car on the way to the gym, you arrive with degraded protective reflexes — Sánchez-Zuriaga (2010) found an hour of flexed sitting raised back-muscle reflex latency from <strong>60 ms to 96 ms</strong>, and muscle fatigue alone did not do that. Standing upright for two or three minutes before you start is higher-yield than any stretch in this section.</div>
+
+    <h3>What to cut</h3>
+    <ul class="col">
+      <li><strong>Foam rolling.</strong> Warneke (2024, <em>J Sport Health Sci</em>, <strong>38 studies, 140 effect sizes</strong>) found foam rolling and stretching produce <strong>no better range of motion or stiffness change than any other warm-up activity</strong>. The authors wrote that there "is no need to emphasize stretching or foam rolling." Five minutes gone for something a meta-analysis this size couldn't find.</li>
+      <li><strong>The pre-training mobility circuit.</strong> Ankle drills, banded hip openers, 90/90s. Oliva (2026) found general mobility work <em>reduced</em> isometric squat force by 3.8%. And you're on a hack squat, which fixes foot position and removes the ankle constraint anyway.</li>
+      <li><strong>Thoracic work before pressing.</strong> I searched specifically: <strong>no</strong> systematic review, meta-analysis or RCT testing acute thoracic mobility against overhead pressing performance or shoulder injury. Pure convention.</li>
+      <li><strong>Stretching "to prevent injury."</strong> Six independent lines, tens of thousands of subjects, converging on nothing: Lauersen 2014 (<strong>RR 0.963</strong>, n=26,610), Thacker 2004 (OR 0.93), Herbert &amp; Gabriel 2002 (<em>BMJ</em>), Pope 2000 (n=1,538 recruits, HR 0.95), Jamtvedt 2010 (n=2,377). This isn't an inconclusive null — it's a precisely estimated zero. In the same analysis, <strong>strength training returned RR 0.315.</strong> You're already doing the thing that works, five times a week.</li>
+      <li><strong>Post-activation potentiation.</strong> Xu (2025, <em>Sports Medicine</em>, 62 studies) puts the effect at <strong>0.12</strong> — trivial — and it shrinks as training status rises. Every measured outcome is jump, sprint or change-of-direction. Not one measured hypertrophy. It also needs 4–7 minutes of rest to work at all.</li>
+      <li><strong>Four or more ramping sets on anything.</strong></li>
+    </ul>
+  </section>
+
+  <section id="routine">
+    <div class="sec-head">
+      <span class="sec-num">07 — The program</span>
+      <h2>Seven days</h2>
+    </div>
+    <div class="col">
+      <p>Order by <strong>priority</strong>: whatever you most want to progress goes first, while fresh. Not because it grows more — Nunes (2021) says order has no hypertrophy effect — but because it accumulates more load over months. Rest: compounds 2.5–3 min, isolation 60–90 s. <strong>Hold these set counts even when the deficit makes you feel like cutting them.</strong></p>
+    </div>
+
+    <div class="week">
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 1</span><span class="session-name">Upper Pull + Zone 2</span><span class="session-vol">15 sets</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Exercise</th><th>Target</th><th>Sets × Reps</th><th>RIR</th><th>Critical cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">HS Iso-Lateral Front Lat Pulldown<small>chest pad — use it</small></td><td class="c-target">Lats</td><td class="c-load">3 × 8–10</td><td class="c-rir">1–2</td><td class="c-cue">Chest stays on the pad, thighs under the hold-down. If the chest leaves the pad the set is over. Grip: whatever's comfortable — it genuinely doesn't matter</td><td class="c-why">Chest-supported vertical pull. Fenwick found supported pulling produced the <em>highest</em> lat activation and the <em>lowest</em> spine load at the same time — not a trade. Chin-ups give you the same lats with more erector work.</td></tr>
+            <tr><td class="c-move">HS Iso-Lateral Row<small>chest pad</small></td><td class="c-target">Lats, rhomboids, mid-traps</td><td class="c-load">3 × 8–10</td><td class="c-rir">1–2</td><td class="c-cue">Drive your elbows back toward your hip pockets. Let your shoulders travel forward at the stretch — don't get pinned so high you lose range</td><td class="c-why">Your horizontal pull, and the primary one rather than a compromise — same Fenwick finding. The higher elbow path also feeds mid-back and rear delt.</td></tr>
+            <tr><td class="c-move">Cable Face Pull</td><td class="c-target">Rear delts, external rotators</td><td class="c-load">4 × 15–20</td><td class="c-rir">0–1 last</td><td class="c-cue">Pull the rope to forehead height. Keep your elbows level with or above your hands — if they drop, it turns into a row and your back takes over</td><td class="c-why">Your only direct rear delt work, and it adds rotator-cuff external rotation in the same set. Nine weekly pulling sets feed the rear delt on top of this.</td></tr>
+            <tr><td class="c-move">Incline DB Curl</td><td class="c-target">Biceps long head, lengthened</td><td class="c-load">3 × 10–12</td><td class="c-rir">0–1 last</td><td class="c-cue">Upper arm stays behind the torso; full extension at the bottom</td><td class="c-why">Rowing under-serves the biceps: a curl grew elbow flexors <strong>+11.1% vs +5.2%</strong> for a row (Mannarino, contralateral design). Incline loads the long head at length — a standing curl cannot.</td></tr>
+            <tr><td class="c-move">Hammer Curl</td><td class="c-target">Brachialis / brachioradialis</td><td class="c-load">2 × 10–12</td><td class="c-rir">0–1 last</td><td class="c-cue">Elbows pinned at your sides and stationary — only the forearm moves</td><td class="c-why">Brachialis and brachioradialis are a genuinely separate target, not a second curl. Two sets is enough given ~4.5 fractional sets already arriving from your pulling.</td></tr>
+            <tr class="is-cardio"><td class="c-move">Zone 2 — bike or incline walk</td><td class="c-target">Energy expenditure</td><td class="c-load">20–25 min</td><td class="c-rir">—</td><td class="c-cue">After lifting, never before. Talk test: full sentences</td><td class="c-why">Weekly energy expenditure, so the diet deficit can stay small enough to protect muscle. Not “fat burning” — that is the deficit’s job.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="session-foot">This is all your direct arm work for the week, and it's enough. One rear delt movement, not two — the reverse pec deck was added on an inference the research explicitly flagged as inference, and removed once the audit showed rear delts were never really at 3 sets. Nine weekly pulling sets already feed them.</p>
+      </div>
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 2</span><span class="session-name">Lower Posterior + Core</span><span class="session-vol">16 sets · hinge last</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Exercise</th><th>Target</th><th>Sets × Reps</th><th>RIR</th><th>Critical cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">Seated Leg Curl<small>3 s eccentric</small></td><td class="c-target">Primary hamstring builder</td><td class="c-load">4 × 8–12</td><td class="c-rir">0–1 last</td><td class="c-cue">Hips flexed and pinned — hips rising shortens the hamstring and kills it</td><td class="c-why">Your <strong>primary</strong> hamstring builder, not an accessory. Maeo’s within-subject trial: seated beat prone across all three biarticular hamstrings — the lengthened stimulus the RDL is prized for, with zero spinal load.</td></tr>
+            <tr><td class="c-move">Machine Hip Thrust</td><td class="c-target">Glute max, shortened</td><td class="c-load">3 × 8–10</td><td class="c-rir">1–2</td><td class="c-cue">At the top: tuck your pelvis under you like you're starting a crunch, pull your ribs down, tuck your chin. Hold one second there</td><td class="c-why">Glutes in the shortened position, which the RDL does not cover. Note it is <em>not</em> spine-sparing — its lumbosacral moment runs ~24% <em>above</em> a back squat (Otsuka).</td></tr>
+            <tr><td class="c-move">Seated Calf Raise<small>3 s lowering — heavy</small></td><td class="c-target">Soleus — progress this hardest</td><td class="c-load">3 × 6–8</td><td class="c-rir">1–2</td><td class="c-cue">Take 3 full seconds to lower. Pause 2 seconds at the very bottom with the heel dropped, then drive up. Never bounce out of the stretch</td><td class="c-why">Soleus carries ~58% of Achilles force when you run (Dorn) and only loads with the knee bent. Heavy and slow because loading magnitude drives tendon adaptation (Bohm), not rep count.</td></tr>
+            <tr><td class="c-move">Romanian Deadlift</td><td class="c-target">Hip extension strength</td><td class="c-load">3 × 6–8</td><td class="c-rir">2–3 never 0</td><td class="c-cue">Keep the bar touching your legs the whole way down. The moment it drifts away from you, that rep is your last one</td><td class="c-why">Kept for hip-extension strength, demoted from hypertrophy driver. Placed last deliberately — by then you are 75+ minutes past waking and out of the peak disc-bending window.</td></tr>
+            <tr><td class="c-move">Hanging Knee Raise<small>last — after the RDL, deliberately</small></td><td class="c-target">Abs — your only direct core work</td><td class="c-load">3 × 8–12</td><td class="c-rir">0–1 last</td><td class="c-cue">Hold a dumbbell between your feet. Raise the knees to hip height, then curl your hips up toward your ribs — that last part is the actual ab work</td><td class="c-why">Your one direct core movement. Compounds are an <em>erector</em> stimulus, not an abdominal one, and hack squats strip out most trunk demand (Clark). The spine is in traction here rather than compression — which is what makes it fine in the morning.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="session-foot">RDL last by design — by then you've been upright and moving 40+ minutes, which is the entire point of the morning-timing finding.</p>
+      </div>
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 3</span><span class="session-name">Upper Push + Zone 2</span><span class="session-vol">17 sets</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Exercise</th><th>Target</th><th>Sets × Reps</th><th>RIR</th><th>Critical cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">HS Select Chest Press</td><td class="c-target">Mid pec, front delt</td><td class="c-load">4 × 6–8</td><td class="c-rir">1–2</td><td class="c-cue">Back flat on the pad — the arch is mechanically impossible here</td><td class="c-why">Seated with your back on a pad makes the lumbar arch <em>mechanically</em> impossible — it fixes the bench complaint by structure, not by remembering a cue mid-set. No hypertrophy cost to machines (Haugen, n=1,016).</td></tr>
+            <tr><td class="c-move">Incline DB Press<small>set the bench to ~30°</small></td><td class="c-target">Upper pec</td><td class="c-load">3 × 8–10</td><td class="c-rir">1–2</td><td class="c-cue">Two notches up from flat, no more. Any steeper and your front shoulders take the work off your chest</td><td class="c-why">Upper pec at the angle where clavicular activation peaks. The regional effect is modest and contested — but 30° costs nothing, and steeper actively costs you pec.</td></tr>
+            <tr><td class="c-move">Machine Pec Deck</td><td class="c-target">Pec, lengthened</td><td class="c-load">3 × 12–15</td><td class="c-rir">0–1 last</td><td class="c-cue">Set the elbow bend once and don't change it — this is a hugging motion, not a press. Let the chest stretch fully at the back</td><td class="c-why">Pec at length, and cheap on your lower back and elbows in a deficit. One fly is defensible; a second would not be.</td></tr>
+            <tr><td class="c-move">Seated or Machine Lateral Raise</td><td class="c-target">Side delt</td><td class="c-load">4 × 10–15</td><td class="c-rir">0–1 last</td><td class="c-cue">Lead with the elbow, not the hand. Don't shrug. Stop just below shoulder height</td><td class="c-why">Side delts get almost nothing from pressing. Seated rather than standing removes the torso lean — that is the reason, not the delt itself.</td></tr>
+            <tr><td class="c-move">Seated Overhead Cable Extension<small>back against an upright bench</small></td><td class="c-target">Triceps long head, lengthened</td><td class="c-load">3 × 10–15</td><td class="c-rir">0–1 last</td><td class="c-cue"><strong>Arms fully overhead — biceps beside your ears, elbows pointing at the ceiling.</strong> Stretch until your hands are behind your head. If your elbows are out in front of you, this is just a pushdown</td><td class="c-why">The long head crosses the shoulder, so <em>only</em> an overhead position stretches it. Maeo: overhead grew the long head <strong>+28.5% vs +19.6%</strong> while using 34–39% <em>less</em> load.</td></tr>
+            <tr class="is-cardio"><td class="c-move">Zone 2 — bike</td><td class="c-target">Energy expenditure</td><td class="c-load">20–25 min</td><td class="c-rir">—</td><td class="c-cue">Talk test</td><td class="c-why">Same job as Day 1 — expenditure that lets the deficit stay moderate. After lifting, never before.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="session-foot">Lead with the flat DB press if you prefer — order has no hypertrophy effect, so put your priority first and stop worrying about it.</p>
+      </div>
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 4</span><span class="session-name">Zone 2 + Mobility</span><span class="session-vol">zero impact</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Item</th><th>Prescription</th><th>Cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">Incline Walk or Bike</td><td class="c-target">35–45 min · 12–15% grade · 108–126 bpm</td><td class="c-cue">Conversational, RPE 3–4. Fasted is fine — just don't expect it to burn more fat</td><td class="c-why">Zone 2 without impact cycles. Your only weekly impact loading is the Day 7 run, deliberately.</td></tr>
+            <tr><td class="c-move">Daily step floor</td><td class="c-target">8,000–10,000/day, every day</td><td class="c-cue">The most reliable lever you have. It will drift down as the deficit accumulates unless you watch it</td><td class="c-why">The most reliable exercise-side lever you have. About 28% of exercise calories vanish to compensation (Careau) — NEAT quietly drifting down is how deficits stall.</td></tr>
+            <tr><td class="c-move">Couch Stretch</td><td class="c-target">2 × 60 s per side</td><td class="c-cue">Squeeze the glute on the stretching side to bias the hip flexor</td><td class="c-why">Hip flexors, and it sits outside the morning window where held stretching is contraindicated.</td></tr>
+            <tr><td class="c-move">Ankle Dorsiflexion</td><td class="c-target">2 × 10 per side</td><td class="c-cue">Knee over the second toe, heel down</td><td class="c-why">Two minutes, kept because it is cheap. The wider pre-training mobility circuit was cut — no better than any other warm-up activity (Warneke, 38 studies).</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 5</span><span class="session-name">Lower Anterior</span><span class="session-vol">14–16 sets</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Exercise</th><th>Target</th><th>Sets × Reps</th><th>RIR</th><th>Critical cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">Hack Squat or Leg Press<small>3 seconds down, 1 second pause, normal speed up</small></td><td class="c-target">Quads, lengthened</td><td class="c-load">4 × 8–10</td><td class="c-rir">2–3</td><td class="c-cue">Stop going down the moment your lower back starts to peel off the pad. Everything past that point loads your spine, not your quads</td><td class="c-why">Your main quad loader with the torso supported. The “spares the spine” claim is unproven — but it does take the bar off your back, which is real.</td></tr>
+            <tr><td class="c-move">Single-Leg Leg Press<small>or Smith lunge — your call</small></td><td class="c-target">Unilateral quad / glute</td><td class="c-load">2 × 10–12 / leg</td><td class="c-rir">1–2</td><td class="c-cue">Keep your back flat against the seat. Drive through the middle of the foot, not the toes</td><td class="c-why">Unilateral loading and hip stability. Only 2 sets, because it carries the highest bracing tax per unit of quad stimulus in the whole program.</td></tr>
+            <tr><td class="c-move">Leg Extension</td><td class="c-target">Quads, shortened</td><td class="c-load">3 × 12–15</td><td class="c-rir">0–1 last</td><td class="c-cue">Recline the seat back a notch if it adjusts — it puts the thigh muscle on more stretch. Squeeze hard for a full second at the top</td><td class="c-why">Quads in the shortened position, which the hack squat never reaches. Machine-only, so no axial cost.</td></tr>
+            <tr><td class="c-move">Seated Leg Curl<small>moved from Day 6</small></td><td class="c-target">Hamstrings — 2nd exposure</td><td class="c-load">2 × 15</td><td class="c-rir">0–1</td><td class="c-cue">Keep your hips pinned to the seat — don't let them lift as you curl</td><td class="c-why">Second hamstring exposure at near-zero systemic cost. Moved here to balance session lengths after the volume audit.</td></tr>
+            <tr><td class="c-move">Standing Calf Raise<small>3 s lowering — heavy</small></td><td class="c-target">Gastrocnemius</td><td class="c-load">3 × 6–8</td><td class="c-rir">1–2</td><td class="c-cue">Knees straight and locked. Three seconds down, pause at the bottom, drive up. No bouncing</td><td class="c-why">Gastrocnemius — the straight-knee counterpart to Day 2’s bent-knee soleus work. Both heads need loading, and only one loads per knee position.</td></tr>
+            <tr><td class="c-move">Ab Wheel Rollout<small>optional — from the knees, partial range</small></td><td class="c-target">Anti-extension — the compensation fix</td><td class="c-load">2 × 8–12</td><td class="c-rir">2–3</td><td class="c-cue">Roll out only as far as you can go without your lower back sagging. The instant it sags, that's your range. Stop the set there</td><td class="c-why">Optional, and it targets your <em>actual</em> problem: the compensation you report is lumbar <em>extension</em>, which is an anti-extension demand. Highest abdominal activity with the lowest erector contribution (Escamilla).</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 6</span><span class="session-name">Upper Mixed + Low-Cost Lower</span><span class="session-vol">18 sets</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Exercise</th><th>Target</th><th>Sets × Reps</th><th>RIR</th><th>Critical cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">HS Iso-Lateral Front Lat Pulldown<small>or any standard cable lat pulldown — either</small></td><td class="c-target">Lats — 2nd exposure</td><td class="c-load">3 × 8–12</td><td class="c-rir">1–2</td><td class="c-cue">Use the same machine as Day 1 if it's free, or a standard pulldown if it isn't. Chest on the pad, thighs locked down, trunk angle fixed. Grip is your choice — just never behind the neck</td><td class="c-why">Second lat exposure. Splitting 12 weekly back sets across two days keeps each session under the per-session ceiling where late sets start degrading.</td></tr>
+            <tr><td class="c-move">HS Iso-Lateral Low Row<small>added — back was the thinnest muscle in the plan</small></td><td class="c-target">Lats — low pulling path</td><td class="c-load">3 × 8–12</td><td class="c-rir">1–2</td><td class="c-cue">Chest stays on the pad. Pull low, toward your waist — that path lines up with what the lat does. Use both arms together unless you have a real side imbalance</td><td class="c-why">Added because back was the thinnest major muscle in the plan at 9 weekly sets. The low path lines up with what the lat mechanically does; Day 1’s higher path covers mid-back.</td></tr>
+            <tr><td class="c-move">HS Select Shoulder Press</td><td class="c-target">Front + side delt</td><td class="c-load">3 × 8–10</td><td class="c-rir">1–2</td><td class="c-cue">Lower back flat against the pad. Don't let your ribs flare as you press up</td><td class="c-why">Your only direct front delt work — and front delts rarely need more when you press twice a week. Seated with the back supported.</td></tr>
+            <tr><td class="c-move">Machine Lateral Raise</td><td class="c-target">Side delt</td><td class="c-load">4 × 12–20</td><td class="c-rir">0–1 last</td><td class="c-cue">Lead with the elbow. On the last set, drop the weight ~40% and go straight back to failure without resting</td><td class="c-why">Second side delt exposure, taking you to 8 weekly sets. Implement genuinely does not matter (Larsen, Bayesian null), so repeating the machine costs nothing.</td></tr>
+            <tr><td class="c-move">Cable Pushdown<small>elbows at your sides</small></td><td class="c-target">Triceps, short positions</td><td class="c-load">3 × 12–20</td><td class="c-rir">0–1 last</td><td class="c-cue">Elbows pinned to your ribs and completely still. This is the opposite arm position to Day 3 — that's what makes them different exercises</td><td class="c-why">Triceps in the short position — the deliberate opposite of Day 3’s overhead. <strong>Elbow position is the only thing making these two different exercises.</strong></td></tr>
+            <tr><td class="c-move">Leg Extension</td><td class="c-target">Quads — 2nd exposure</td><td class="c-load">2 × 15</td><td class="c-rir">0–1</td><td class="c-cue">Squeeze hard for a full second at the top of each rep</td><td class="c-why">Second quad exposure at zero axial and near-zero systemic cost. Cheap volume.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="session-foot">No biceps here, deliberately. A curl beats a row for elbow flexors (+11.1% vs +5.2%) — but a <em>third</em> curl on top of an adequate program adds nothing. Both halves of that come from the same literature.</p>
+        <div class="note"><strong>Why a row appeared here.</strong> A full audit found back was the thinnest major muscle in the program at 9 weekly sets — against 11 for quads and 10 for chest, and lats are the bigger muscle group. You were pulling vertically twice a week and horizontally only once. Adding this takes back to 12. <strong>Don't fill any future gap on this day with a chest press</strong> — chest sits at 10 sets on the flat part of the dose-response curve, where extra sets buy almost nothing detectable.</div>
+        <div class="note"><strong>Two rows, two paths — and be honest about why.</strong> This is the <em>low</em> row; Day 1 is the higher-elbow-path row. That pairing is not chosen because variation grows more muscle — Kassiano (2022, 8 studies) and Baz-Valle (2019, the only trained-subject RCT) both found <strong>exercise variation produces no hypertrophy benefit</strong>, only better motivation. It's chosen because a low pulling path lines up with the lat's actual mechanical action while a higher path recruits more mid-back and rear delt, so one of each covers both. That reasoning is <em>mechanical, not evidential</em> — the angle-and-region literature keeps returning trivial effects. Running the same machine on both days would cost you nothing measurable.</div>
+        <div class="note"><strong>On the Day 6 → Day 1 gap.</strong> Your lat work is spaced unevenly — five days from Day 1 to Day 6, then only two back to Day 1. That's fine, because the <em>sizes</em> are lopsided in the helpful direction: Day 1 is the big session (6 lat sets) and gets the long gap; Day 6 is a light 3-set exposure and is what sits 48 hours before it. You go into your heaviest pulling day after three sets, not six. And distribution probably isn't a variable anyway — Schoenfeld (2019) and Pelland (2026) both found frequency has negligible hypertrophy effect once weekly volume is equated. If Day 1 pulldowns start declining at matched effort two weeks running, that's the signal to change something. The calendar isn't.</div>
+      </div>
+
+      <div class="session">
+        <div class="session-head"><span class="session-day">Day 7</span><span class="session-name">Run</span><span class="session-vol">easy, or intervals</span></div>
+        <div class="scroller"><table>
+          <thead><tr><th>Item</th><th>Prescription</th><th>Cue</th><th>Why it’s here</th></tr></thead>
+          <tbody>
+            <tr><td class="c-move">Default: 5 km easy</td><td class="c-target">Conversational · 126–145 bpm</td><td class="c-cue">Flat route — downhill raises patellofemoral damage, uphill raises Achilles and tibial</td><td class="c-why">Weight-bearing tendon and bone loading you cannot get on a bike, plus cardiorespiratory fitness — which predicts mortality with <em>no observed upper limit</em> (Mandsager, 122,007 patients).</td></tr>
+            <tr><td class="c-move">Or: intervals<small>if you want the harder stimulus</small></td><td class="c-target">5 × 3 min @ 150–165 bpm, 2–3 min easy between</td><td class="c-cue">Same VO₂max stimulus, far less eccentric load than a hard continuous 5 km. Once weekly maximum</td><td class="c-why">If you want the VO₂max stimulus: roughly 15–20 min at intensity instead of 25–30 continuous, so far less accumulated eccentric load.</td></tr>
+            <tr><td class="c-move">Safer still: same intervals on the bike</td><td class="c-target">Near-zero eccentric load</td><td class="c-cue">You keep the entire cardiovascular benefit and lose only running specificity</td><td class="c-why">Same cardiovascular benefit, near-zero eccentric load. The best version while you are in a deficit and injury risk is elevated.</td></tr>
+            <tr><td class="c-move">Foot strike &amp; progression</td><td class="c-target">Rearfoot or midfoot · ~30% per 2 weeks</td><td class="c-cue">Don't switch to forefoot to "protect" the Achilles — it raises peak stress 31%</td><td class="c-why">Rearfoot or midfoot is the protective choice — forefoot striking raises peak Achilles stress <strong>31%</strong> (Lyght). The 10%/week rule was folklore; ~30% per fortnight is the real ceiling.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="session-foot">Skip the interval version entirely in any week where sleep, recovery or joints are poor. Under-fuelled hard running is the highest injury-risk item in the week.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="weekly">
+    <div class="sec-head">
+      <span class="sec-num">08 — Weekly totals</span>
+      <h2>What each muscle actually gets</h2>
+    </div>
+    <div class="col">
+      <p>Keep this table honest as you make changes — it is the thing that catches distribution problems that per-session tinkering hides. Target band is <strong>12–20 direct sets</strong> for a priority muscle (Baz-Valle 2022, trained men).</p>
+    </div>
+    <div class="scroller"><table>
+      <thead><tr><th>Muscle</th><th>Direct sets</th><th>Where</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="c-move">Quads</td><td class="c-load">11</td><td class="c-target">Day 5 (9) · Day 6 (2)</td><td class="c-cue">In band</td></tr>
+        <tr><td class="c-move">Lats / back</td><td class="c-load">12</td><td class="c-target">Day 1 (6) · Day 6 (6)</td><td class="c-cue">Was 9 — the audit's main finding. Now balanced vertical and horizontal</td></tr>
+        <tr><td class="c-move">Chest</td><td class="c-load">10</td><td class="c-target">Day 3</td><td class="c-cue">Flat part of the curve — don't add</td></tr>
+        <tr><td class="c-move">Hamstrings</td><td class="c-load">9</td><td class="c-target">Day 2 (7) · Day 5 (2)</td><td class="c-cue">Plus glute/hinge work</td></tr>
+        <tr><td class="c-move">Side delts</td><td class="c-load">8</td><td class="c-target">Day 3 (4) · Day 6 (4)</td><td class="c-cue">Plus partial credit from pressing</td></tr>
+        <tr><td class="c-move">Triceps</td><td class="c-load">6</td><td class="c-target">Day 3 (3) · Day 6 (3)</td><td class="c-cue">Plus ~3.5 fractional from 7 pressing sets</td></tr>
+        <tr><td class="c-move">Glutes</td><td class="c-load">6</td><td class="c-target">Day 2</td><td class="c-cue">Hip thrust + RDL</td></tr>
+        <tr><td class="c-move">Biceps</td><td class="c-load">5</td><td class="c-target">Day 1</td><td class="c-cue">Plus ~4.5 fractional from 9 pulling sets</td></tr>
+        <tr><td class="c-move">Rear delts</td><td class="c-load">4</td><td class="c-target">Day 1</td><td class="c-cue">Plus indirect from 9 pulling sets. Was 6 — reduced, see below</td></tr>
+        <tr><td class="c-move">Front delts</td><td class="c-load">3</td><td class="c-target">Day 6</td><td class="c-cue">Plus ~3.5 fractional. Rarely needs direct work when you press twice weekly</td></tr>
+        <tr><td class="c-move">Calves</td><td class="c-load">3 + 3</td><td class="c-target">Day 2 soleus · Day 5 gastroc</td><td class="c-cue">Heavy and slow, not high-rep</td></tr>
+        <tr><td class="c-move">Abs</td><td class="c-load">3 (+2)</td><td class="c-target">Day 2 · Day 5 optional</td><td class="c-cue">One loaded movement is the right number</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><strong>A correction worth recording.</strong> Rear delts were raised from 3 to 6 sets on a volume-allocation argument — and the research had explicitly flagged that claim as <em>inference, not evidence</em>, since no RCT exists on rear delt volume. The count was also wrong: it ignored the indirect contribution from nine weekly pulling sets, so rear delts were never really at 3. Reduced to 4, and the freed sets went to the back, which the audit showed was genuinely thin. <strong>Session lengths now run 15–18 instead of 12–20.</strong></div>
+  </section>
+
+  <section id="corrections">
+    <div class="sec-head">
+      <span class="sec-num">09 — Corrections</span>
+      <h2>What earlier versions got wrong</h2>
+    </div>
+    <div class="audit">
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Moving calf work away from the run</span><span class="chip is-cut">Reversed</span></div>
+        <p class="item-why">Called the highest tendon risk in the schedule. <strong>No evidence exists that calf training near a run raises Achilles risk</strong> — a targeted search found nothing. Lauersen (2014, <em>BJSM</em>, n=26,610) found strength training cuts overuse injuries to <strong>RR 0.527</strong>, and heavy slow resistance is a Level-1 <em>treatment</em> for Achilles tendinopathy (Beyer 2015). The real error was the inverse: <strong>too little soleus loading, done as high-rep work.</strong> Soleus carries ~58% of triceps surae force in running (Dorn 2012) and only loads with the knee bent.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">"The hip thrust spares the spine"</span><span class="chip is-cut">Backwards</span></div>
+        <p class="item-why">Otsuka (2021, <em>PLOS ONE</em>), trained males at 6RM: lumbosacral extension moment <strong>deadlift 410 N·m, hip thrust 385, back squat 316.</strong> The hip thrust runs ~24% <em>above</em> the squat. Keep it for glutes; stop calling it offloading.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">"The bench arch is a lumbar risk"</span><span class="chip is-cut">Not evidenced</span></div>
+        <p class="item-why">No study measuring lumbar load during bench press exists, and no injury epidemiology attributes lumbar injury to the arch. The erector fatigue is still worth eliminating — recovery spent on a non-target muscle. The injury claim is withdrawn.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Dead hangs for decompression</span><span class="chip is-cut">Withdrawn</span></div>
+        <p class="item-why">Wegner (2013, <strong>Cochrane</strong>, 32 RCTs, 2,762 participants): traction makes little or no difference to pain, function or return to work. Hang for grip and shoulders if you enjoy it. The intervention that restores disc height is lying down.</p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">The 10% run rule &amp; the 180 spm cadence target</span><span class="chip is-cut">Both folklore</span></div>
+        <p class="item-why">Buist (2008, RCT, 532 runners): ~10%/week graded versus standard gave <strong>20.8% vs 20.3% injury incidence.</strong> Revised ceiling is ~30% per fortnight (Nielsen 2014). And Szymanek (2020, 381 runners, prospective): <strong>172 spm uninjured vs 173 injured.</strong> You don't need to measure cadence, because you shouldn't be chasing it.</p>
+      </div>
+      <div class="item is-swap">
+        <div class="item-top"><span class="item-name">"Frequency drives hypertrophy"</span><span class="chip is-swap">Right call, wrong reason</span></div>
+        <p class="item-why">Schoenfeld (2019, 25 studies) and Pelland (2026, 67 studies / 2,058 participants) both find <strong>frequency has negligible effect on hypertrophy once weekly volume is equated.</strong> Frequency is a <em>strength</em> variable. The real reason to split legs is the per-session ceiling, past which late sets run at degraded output.</p>
+      </div>
+      <div class="item is-swap">
+        <div class="item-top"><span class="item-name">Collagen, and "180 g protein is just insurance"</span><span class="chip is-swap">Both reversed</span></div>
+        <p class="item-why">Collagen: Kirmse (2024) meta-analysed 13 trials — strength <strong>SMD 0.079, p = 0.445</strong>, 48 of 55 parameters null, 11 of 13 studies industry-linked. Cancelled. Protein: 1.6 g/kg is the plateau in a <em>surplus</em>, but in a deficit protein does muscle-retention work — Helms (2014) puts the range at 1.8–2.7 g/kg. <strong>Your original 180 g was right.</strong></p>
+      </div>
+      <div class="item is-cut">
+        <div class="item-top"><span class="item-name">Two citations I got wrong myself</span><span class="chip is-cut">Own error</span></div>
+        <p class="item-why">I briefed the research with two claims that don't hold. Andersen (2014) is a <strong>grip-width study within the pulldown</strong>, not a pulldown-versus-pull-up comparison. And there is <strong>no Schoenfeld chest fly versus bench press RCT</strong> — the paper I was reaching for is an unreviewed preprint by different authors comparing two profiles <em>within</em> the fly, finding no difference. Neither changed a recommendation, but the record should show it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ledger">
+    <div class="sec-head">
+      <span class="sec-num">10 — Change ledger</span>
+      <h2>What moved in this revision</h2>
+    </div>
+    <div class="ledger">
+      <div class="ledger-col is-swap">
+        <div class="ledger-head"><span class="n">6</span><span>Changed</span></div>
+        <ul>
+          <li>Low-to-high cable fly → chest-supported reverse pec deck</li>
+          <li>Hanging knee raise → Day 2, and now loaded</li>
+          <li>Day 3 triceps → seated, arms genuinely overhead</li>
+          <li>Day 6 triceps → explicit pushdown, elbows pinned</li>
+          <li>Day 6 lateral raise 3 → 4 sets</li>
+          <li>Every cue rewritten as an instruction, not a rationale</li>
+        </ul>
+      </div>
+      <div class="ledger-col is-keep">
+        <div class="ledger-head"><span class="n">3</span><span>Added</span></div>
+        <ul>
+          <li>Warm-up protocol — 6 min upper, 10 min lower</li>
+          <li>Optional ab wheel rollout for the extension compensation</li>
+          <li>Chest pad confirmed — both problem lifts fully supported</li>
+        </ul>
+      </div>
+      <div class="ledger-col is-cut">
+        <div class="ledger-head"><span class="n">6</span><span>Cut from the warm-up</span></div>
+        <ul>
+          <li>Foam rolling · mobility circuit · thoracic drills · stretching for injury prevention · PAP · 4+ ramping sets</li>
+        </ul>
+      </div>
+      <div class="ledger-col is-cut">
+        <div class="ledger-head"><span class="n">7</span><span>Declared noise</span></div>
+        <ul>
+          <li>Grip width · iso-lateral · lateral raise variant · machine vs free weight · exercise order · fly resistance profile · exercise variation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="verify">
+    <div class="sec-head">
+      <span class="sec-num">11 — Verification</span>
+      <span class="sec-num" style="display:none"></span>
+      <h2>How to know it worked</h2>
+    </div>
+    <ol class="col">
+      <li><strong>The postural test — week one.</strong> Lock the trunk on the pulldown and row at the <em>same load</em>. If erector soreness resolves, the mechanism is confirmed and your load never had to drop. If it doesn't, that directive is wrong. Cheapest test in the program.</li>
+      <li><strong>The morning-hinge test — four weeks.</strong> Hinge out of the first waking hour and placed last. Snook's RCT predicts symptom reduction; if none appears, the diurnal mechanism isn't your driver.</li>
+      <li><strong>Strength retention is the real endpoint in a cut.</strong> Holding load at matched RIR <em>is</em> success. If your indicator lifts hold for 12 weeks while weight falls 0.5% per week, the program worked — that is the outcome to judge it on, not the mirror.</li>
+      <li><strong>Weight trend.</strong> Four times weekly, fasted, four-week rolling average. 0.5–0.7% per week. Faster costs lean mass.</li>
+      <li><strong>Steps.</strong> Track them like a training variable, because they are one.</li>
+      <li><strong>Performance as the only fatigue marker.</strong> Two consecutive weeks of unexplained decline at matched RIR is your deload trigger — one week at 50% sets, load held constant. Not soreness, not HRV, not motivation.</li>
+      <li><strong>Tendon check.</strong> Morning Achilles and patellar stiffness on run day +1. Anything past 24 hours, hold running volume. Never run through Achilles symptoms — prior tendinopathy carries OR 6.3, dwarfing every training-load variable.</li>
+    </ol>
+  </section>
+
+  <footer>
+    General training and nutrition analysis, not medical advice. Persistent or sharp lumbar pain, and any tendon symptom outlasting 24 hours, warrants assessment by a physiotherapist or physician before continuing to load it. Citations were verified by literature search; where a study's numbers could not be retrieved from full text, where a claim rests on mechanistic reasoning rather than measurement, or where the underlying subjects were untrained, that is marked in the text rather than smoothed over.
+  </footer>
+
+</div>
