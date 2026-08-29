@@ -47,13 +47,13 @@ for old, new in TONED:
 # explains or audits it sits behind the nav.
 TABS = [
     (u'plan',        u'The Plan',    u'Warm-up, the seven days, weekly volume',
-     [u'rule', u'warmup', u'routine', u'weekly']),
+     [u'warmup', u'routine', u'weekly']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
      [u'loading', u'block', u'progress']),
     (u'fuel',        u'Fuel',        u'Cardio placement, calories, protein',
      [u'cardio', u'nutrition']),
-    (u'evidence',    u'Evidence',    u'Every citation graded, and the constraints checked',
-     [u'appendix', u'validation', u'practical']),
+    (u'evidence',    u'Evidence',    u'The one rule, every citation graded, and the constraints checked',
+     [u'rule', u'appendix', u'validation', u'practical']),
 ]
 
 masthead = re.search(r'  <header class="masthead">.*?\n  </header>\n', body, re.S).group(0)
