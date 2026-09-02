@@ -7,3 +7,8 @@
 secrets*
 credentials*
 api-key*
+
+# Editor/script backups. This repo publishes from root - never publish stale copies.
+*.bak
+*.bak-*
+*.bak.*

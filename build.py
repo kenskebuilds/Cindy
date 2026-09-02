@@ -50,10 +50,10 @@ TABS = [
      [u'warmup', u'routine', u'weekly']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
      [u'loading', u'block', u'progress']),
-    (u'fuel',        u'Fuel',        u'Cardio placement, calories, protein',
-     [u'cardio', u'nutrition']),
-    (u'evidence',    u'Evidence',    u'The one rule, every citation graded, and the constraints checked',
-     [u'rule', u'appendix', u'validation', u'practical']),
+    (u'fuel',        u'Fuel',        u'Cardio placement, calories, protein, supplements, adherence',
+     [u'cardio', u'nutrition', u'supplements', u'adherence']),
+    (u'evidence',    u'Evidence',    u'The one rule, every citation graded, what the evidence overturns, and the constraints checked',
+     [u'rule', u'challenge', u'appendix', u'validation', u'practical']),
 ]
 
 masthead = re.search(r'  <header class="masthead">.*?\n  </header>\n', body, re.S).group(0)
