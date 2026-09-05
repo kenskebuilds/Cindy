@@ -12,3 +12,6 @@ api-key*
 *.bak
 *.bak-*
 *.bak.*
+
+# Third-party research input, not part of the published site.
+gemini_research/

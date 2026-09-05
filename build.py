@@ -14,6 +14,10 @@ head_bits, body = frag[:i], frag[i:]
 title = re.search(r'<title>([^<]*)</title>', head_bits).group(1)
 head_bits = head_bits.replace(u'<title>%s</title>' % title, u'')
 
+# The artifact build keeps the head exactly as authored - theme-aware, no palette
+# swap. Snapshot it before the static page's light-theme surgery below.
+head_themed = head_bits
+
 # Force light theme: the artifact stays theme-aware, the static page does not.
 # Strip the prefers-color-scheme dark block and the [data-theme="dark"] override.
 head_bits = re.sub(
@@ -48,6 +52,8 @@ for old, new in TONED:
 TABS = [
     (u'plan',        u'The Plan',    u'Warm-up, the seven days, weekly volume',
      [u'warmup', u'routine', u'weekly']),
+    (u'fourday',     u'4-Day Variant', u'The same 98 sets in four sessions — a volume-matched trial plan that co-exists with the five-day',
+     [u'fourday']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
      [u'loading', u'block', u'progress']),
     (u'fuel',        u'Fuel',        u'Cardio placement, calories, protein, supplements, adherence',
@@ -143,6 +149,12 @@ TAB_JS = u"""
     });
   });
   window.addEventListener('popstate', function () { show(location.hash.slice(1), false); });
+  // In-page links to another tab's panel (e.g. href="#fourday") change the hash
+  // without a popstate, so the panel would stay hidden. Switch tabs on hashchange too.
+  window.addEventListener('hashchange', function () {
+    show(location.hash.slice(1), false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
   show(location.hash.slice(1) || tabs[0].dataset.tab, false);
 
   var ev = document.getElementById('ev-toggle');
@@ -209,6 +221,27 @@ if not os.path.isdir(OUT):
     os.makedirs(OUT)
 
 io.open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(page)
+
+# ---------------------------------------------------------- artifact ----
+# Same tabs, same JS, same content - but as a fragment for claude.ai/code,
+# which supplies its own <!doctype>, <head> and reset at publish time. So no
+# doctype wrapper, no RESET, no light-theme forcing: the page follows the
+# viewer's theme, which is why head_themed is used rather than head_bits.
+# Written on every build so it can never drift from index.html.
+art_head = head_themed.strip()
+if not art_head.endswith(u"</style>"):
+    raise SystemExit("build: expected the source head to end with </style>")
+cut = art_head.rfind(u"</style>")
+art_head = art_head[:cut] + TAB_CSS + art_head[cut:]
+
+artifact = u"""<title>%s</title>
+%s
+
+%s%s
+""" % (
+    title, art_head, body.rstrip(), TAB_JS)
+
+io.open(os.path.join(OUT, "artifact.html"), "w", encoding="utf-8").write(artifact)
 io.open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write(
     u"User-agent: *\nDisallow: /\n")
 io.open(os.path.join(OUT, ".nojekyll"), "w", encoding="utf-8").write(u"")

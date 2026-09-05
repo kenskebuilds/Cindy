@@ -161,10 +161,42 @@
   .wkbox .w-n { font-family:var(--f-mono); font-size:.68rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
   .wkbox .w-t { font-family:var(--f-display); font-weight:600; font-size:.98rem; line-height:1.2; }
   .wkbox p { font-size:.85rem; line-height:1.45; color:var(--ink-2); margin:0; }
+
+  .tabs { position:sticky; top:0; z-index:20; display:flex; gap:.15rem;
+    margin:0 calc(var(--pad) * -1); padding:0 var(--pad);
+    background:color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--rule-strong);
+    overflow-x:auto; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { appearance:none; background:none; border:0; border-bottom:2px solid transparent;
+    font-family:var(--f-mono); font-size:.7rem; font-weight:600; letter-spacing:.11em;
+    text-transform:uppercase; color:var(--ink-3); cursor:pointer;
+    padding:.95rem .85rem; white-space:nowrap; transition:color .12s, border-color .12s; }
+  .tab:hover { color:var(--ink-2); }
+  .tab[aria-selected="true"] { color:var(--accent); border-bottom-color:var(--accent); }
+  .panel-blurb { font-family:var(--f-mono); font-size:.7rem; letter-spacing:.02em;
+    color:var(--ink-3); margin:0; }
+  .panel { display:flex; flex-direction:column; gap:3.25rem; }
+  body.js .panel[hidden] { display:none; }
+  .panel > section:first-of-type .sec-head { border-top:0; padding-top:0; }
+  /* Let the workout tables break out past the reading column on wide screens.
+     Prose stays at a readable measure; only the tables go wide. Below ~1200px
+     they fall back to scrolling inside .scroller, exactly as on mobile. */
+  #routine .scroller { width:min(94vw, 1320px); margin-left:50%; transform:translateX(-50%); }
+  #routine table { min-width:1120px; }
+  #routine .c-why { min-width:17rem; }
+  #routine .c-cue { min-width:14rem; }
+  @media (max-width:64rem) { #routine .scroller { width:auto; margin-left:0; transform:none; } }
+  .ev-toggle { margin-left:auto; color:var(--ink-3); border-bottom-color:transparent; }
+  .ev-toggle::before { content:"+"; margin-right:.4rem; }
+  .ev-toggle[aria-pressed="true"] { color:var(--accent); }
+  .ev-toggle[aria-pressed="true"]::before { content:"\2013"; }
+  @media (max-width:40rem) { .tab { padding:.85rem .6rem; font-size:.65rem; }
+    .ev-toggle { margin-left:.5rem; } }
 </style>
 
 <div class="wrap">
-
   <header class="masthead">
     <p class="eyebrow">Proposed Protocol · Fat-Loss Phase · Age 40 · Intermediate–Advanced</p>
     <h1>The Deficit Hypertrophy Protocol</h1>
@@ -183,21 +215,16 @@
       <span>Trains <b>early morning</b></span>
     </div>
   </header>
-
-  <section id="rule">
-    <div class="sec-head">
-      <span class="sec-num">The one rule</span>
-      <h2>The deficit is the only thing that should get smaller</h2>
-    </div>
-    <div class="note is-key"><strong>Murphy &amp; Koehler (2022, <em>Scand J Med Sci Sports</em>, meta-analysis and meta-regression of RCTs ≥3 weeks)</strong> found that training in an energy deficit impairs gains in lean mass but <strong>not strength</strong>, and that the regression crossed zero at roughly <strong>500 kcal·day⁻¹</strong> — beyond that deficit, lean mass gains stopped. Independently, <strong>Roth, Schoenfeld &amp; Behringer (2022, <em>Eur J Appl Physiol</em>, 15 studies of resistance-trained athletes in caloric restriction)</strong> found that holding <strong>at least 10 weekly sets per muscle</strong> and not cutting volume as calories drop was what tracked with little-to-no lean mass loss.</div>
-    <div class="col">
-      <p class="thesis">Two numbers govern this entire document: the deficit stays at or under 500 kcal, and the weekly set count never gets cut because you feel flat. Everything else on this page is downstream of those.</p>
-      <p>This matters because the instinct in a cut runs the other way. Training feels worse, sessions feel longer, and the natural response is to trim sets and add cardio. Both meta-analyses above say that is the exact inversion of what works: the deficit is the variable to keep small, and the volume is the variable to defend.</p>
-      <p>The second constraint shaping every page here is the lumbar spine. It is not treated as a mobility problem to be stretched away — it is treated as a <em>loading budget</em>. Axial load is spent deliberately on the two or three lifts that genuinely need it, and every other slot in the week is filled with a supported or machine-based alternative that buys the same hypertrophy at a lower spinal cost.</p>
-    </div>
-    <div class="note"><strong>What changed from the previous revision, and why.</strong> The prior plan was audited against nine constraints and failed three of them outright. It had <strong>no periodisation at all</strong> — no accumulation, no deload. It had <strong>no stated progression rule</strong> — rep ranges and RIR but no trigger for adding load or sets. And <strong>seven muscles were trained once a week</strong>: chest, glutes, biceps, front delts, rear delts, abs, and each calf head individually. Weekly volume has barely moved. What moved is how it is distributed, and what tells you when to change it. The full audit is in the <em>Validation</em> tab.</div>
-  </section>
-
+  <nav class="tabs" aria-label="Sections">
+    <button type="button" class="tab" data-tab="plan" aria-selected="false" title="Warm-up, the seven days, weekly volume">The Plan</button>
+    <button type="button" class="tab" data-tab="fourday" aria-selected="false" title="The same 98 sets in four sessions — a volume-matched trial plan that co-exists with the five-day">4-Day Variant</button>
+    <button type="button" class="tab" data-tab="progression" aria-selected="false" title="Loading tiers, the four-week block, when to change what">Progression</button>
+    <button type="button" class="tab" data-tab="fuel" aria-selected="false" title="Cardio placement, calories, protein, supplements, adherence">Fuel</button>
+    <button type="button" class="tab" data-tab="evidence" aria-selected="false" title="The one rule, every citation graded, what the evidence overturns, and the constraints checked">Evidence</button>
+    <button type="button" id="ev-toggle" class="tab ev-toggle" aria-pressed="false">Show evidence</button>
+  </nav>
+  <div class="panel" id="plan" role="region" aria-label="The Plan">
+    <p class="panel-blurb">Warm-up, the seven days, weekly volume</p>
   <section id="warmup">
     <div class="sec-head">
       <span class="sec-num">01 — Warm-up</span>
@@ -324,7 +351,6 @@
     <div class="note is-warn"><strong>⚠️ The one injury-specific rule, and the only reason any mobility work survives in this plan.</strong> No <em>held</em> lumbar-flexion stretches in your first waking hour: toe touches, standing forward folds, seated hamstring stretches, child's pose, or any sustained rounded-back foam-rolling position. <strong>Adams &amp; Dolan (1996)</strong> found five minutes of sustained flexion cut the spine's bending resistance by <strong>42%</strong> across 45 cadaveric segments, and <strong>Snook's sham-controlled RCT (1998)</strong> found restricting early-morning lumbar flexion produced a <strong>33% reduction in pain intensity</strong> (95% CI 11–55%). The mechanism is duration-dependent creep, not flexion itself — a controlled RDL is a different exposure from a 60-second hold, and rapid flexion actually <em>increased</em> bending resistance 10–15%. It is the held position to eliminate, not hip hinging.</div>
     <div class="note"><strong>Higher-yield than any stretch in this section:</strong> if you sit hunched in a car on the way to the gym, you arrive with degraded protective reflexes. <strong>Sánchez-Zuriaga (2010)</strong> found an hour of flexed sitting raised back-muscle reflex latency from <strong>60 ms to 96 ms</strong>, and muscle fatigue alone did not do that. Stand upright for two or three minutes before you start.</div>
   </section>
-
   <section id="routine">
     <div class="sec-head">
       <span class="sec-num">02 — The program</span>
@@ -776,7 +802,6 @@
 
     </div>
   </section>
-
   <section id="weekly">
     <div class="sec-head">
       <span class="sec-num">03 — Weekly totals</span>
@@ -816,7 +841,9 @@
    <div class="note is-warn"><strong>⚠️ Three things the evidence contradicts, stated plainly because they were part of the brief.</strong><br><br><strong>1. "A strong lower body supports upper-body muscle gains." This is refuted, not merely unproven.</strong> The mechanism behind it is the acute-hormone hypothesis, and it has been directly tested. <strong>West et al. (2010, <em>J Appl Physiol</em>)</strong> ran 15 weeks of unilateral elbow-flexor training with and without a prior high-volume leg bout and found <strong>no difference in hypertrophy or strength</strong>. West et al. (2009, <em>J Physiol</em>), Mitchell et al. (2013, <em>PLoS ONE</em>) and Morton et al. (2016) agree; Phillips (2012) titled his commentary "chasing a hormonal ghost." The single supporting study (Rønnestad 2011) had <strong>n=9</strong>, showed the effect at one of several measurement sites, was publicly questioned, and has not been replicated. Since recovery capacity is finite and in a deficit it is reduced, excess leg volume plausibly <em>costs</em> you upper-body progress. <strong>Train legs on their own merits — running, healthspan, function — not as an upper-body accessory.</strong><br><br><strong>2. Lifting will not raise your VO₂max.</strong> The running-economy meta-analysis (<strong>Llanos-Lagos et al. 2024, <em>Sports Medicine</em>, 31 trials, 652 runners</strong>) found high-load strength training improved economy (ES −0.266) and time-trial performance (ES −0.469) while <strong>VO₂max, vVO₂max and lactate threshold were all unchanged</strong> (p &gt; 0.23). The lifting works on the economy and force-production axis; the running does the aerobic work. Both are worth doing, for different reasons.<br><br><strong>3. Strength training is not reliable injury-proofing for running.</strong> <strong>Peterson et al. (2022, <em>Sports Med Open</em>), 30 prospective studies, 3,404 non-elite runners</strong>, tested over 100 candidate risk factors. The only significant strength finding was knee-extension strength at <strong>SMD −0.19</strong> — which the authors themselves call trivial and possibly not clinically important. Plantarflexor, hamstring and hip-abductor strength: all null. Hip strength and patellofemoral pain is null prospectively even though it looks strong cross-sectionally (Rathleff 2014) — the weakness follows the pain rather than causing it. The best-supported modifiable risk factor in running injury is <strong>training-load management and prior injury history</strong>, not muscle strength. Lift for economy and healthspan; do not sell it to yourself as injury insurance.</div>
    <div class="note is-key"><strong>Why total sets per session is the wrong thing to balance — and what to balance instead.</strong> Before the rebalance the week ran 14 / 22 / 19 / 21 / 24, which looks badly lopsided. It mostly was not, because <strong>fatigue accumulates per muscle, not per session.</strong> Day 6's 24 sets were spread across seven muscles at 3–4 sets each; Day 1's 14 sets sat on only three muscles. By the metric that matters, the light day was the more concentrated one.<br><br><strong>Remmert, Pelland, Robinson, Hinson &amp; Zourdos (2025)</strong> meta-regressed per-session volume and put the point of undetectable outcome superiority at roughly <strong>11 fractional sets per muscle per session</strong> for hypertrophy — beyond that, returns flatten. ⚠️ <em>SportRxiv preprint, not peer-reviewed, and the authors note there is little data at very high per-session volumes. Medium confidence.</em> Against that number, the most concentrated slot in this program is <strong>chest on Day 3 at 9 direct sets</strong> — the only place in the week approaching the ceiling. Nothing else exceeds 7. <strong>It was left at 9 deliberately</strong>: moving a set to Day 6 would take the pec deck to a single token set, and 9 is still comfortably under 11 on a figure that comes from a preprint. <strong>The trigger to act on, stated concretely:</strong> if your last pec deck set declines at matched load for two consecutive weeks while the chest press is still progressing, move one set from Day 3 to Day 6 — 8 / 4 instead of 9 / 3. That is a per-session ceiling problem, not a weekly volume problem, and adding sets would make it worse.<br><br>So the rebalance was done for the clock and for local fatigue, not because the old distribution was costing growth. Three side delt sets moved to Day 1: the week is now 17–22 sets and 51–71 minutes door-to-door, instead of 14–24 sets and 54–79 minutes. Cutting the seated calf raise took Day 2 down further, to 20 sets and about 56 minutes.</div>
   </section>
-
+  </div>
+  <div class="panel" id="fourday" role="region" aria-label="4-Day Variant">
+    <p class="panel-blurb">The same 98 sets in four sessions — a volume-matched trial plan that co-exists with the five-day</p>
   <section id="fourday">
     <div class="sec-head">
       <span class="sec-num">V — Four-day variant</span>
@@ -1257,6 +1284,9 @@
       <div class="note is-key"><strong>What switching back costs: nothing.</strong> Both plans use the same exercises, the same loading tiers, the same four-week block structure, the same progression rules and the same nutrition. The variant is a re-sequencing, not a second program — so a failed trial costs you one block of slightly different scheduling and no lost training. That asymmetry is the actual argument for trying it: <strong>the downside is a month of equivalent training, and the upside is 56 minutes and one gym trip back every week for the rest of the diet.</strong></div>
     </div>
   </section>
+  </div>
+  <div class="panel" id="progression" role="region" aria-label="Progression">
+    <p class="panel-blurb">Loading tiers, the four-week block, when to change what</p>
   <section id="loading">
     <div class="sec-head">
       <span class="sec-num">04 — Loading</span>
@@ -1286,7 +1316,6 @@
     </div>
     <div class="note"><strong>Two exceptions, both deliberate.</strong> The <strong>calf raises</strong> run at 6–8 reps with a three-second eccentric — heavier and slower than their isolation status would suggest, because tendon adaptation is driven by loading <em>magnitude</em> rather than rep count (Bohm). The <strong>Romanian deadlift</strong> runs at 6–8 reps but at 2–3 RIR rather than 2 — it is the only barbell lift in the program and the only one where a missed rep is a spinal event rather than a training one.</div>
   </section>
-
   <section id="block">
     <div class="sec-head">
       <span class="sec-num">05 — The block</span>
@@ -1323,7 +1352,6 @@
     <div class="note is-warn"><strong>⚠️ Volume is flat inside the block, and that is a change from my own first draft.</strong> Earlier versions added 4 sets in week 2 and 4 more in week 3. That is the conventional design, and the trial closest to your situation does not support it.<br><br><strong>Barsuhn et al. (2025, <em>J Appl Physiol</em> 138(1):259–269, PMID 39665246)</strong> randomised resistance-<em>trained</em> men to maintain their prior weekly volume or increase it by 30% or 60%, lower body, 8 weeks. <strong>The maintenance group gained the most</strong>: anterior thigh thickness +1.07 cm, versus +0.76 cm at +30% and +0.70 cm at +60%. Maximal strength also favoured maintenance. ⚠️ <em>Only 29 of 55 randomised completed (~47% dropout), 9–10 per group, 8 weeks, lower body only — and a null result is not proof of harm.</em> <em>Corrected 31 Aug 2026: this trial was cited here as “Enes et al. 2024, J Appl Physiol” through several revisions. No such paper exists. The study described — and its exact completer counts and thickness figures — is Barsuhn et al. 2025, verified against the primary abstract. What the real Enes 2024 found is set out below, and it does not say what this section previously claimed it said.</em><br><br>Against it: <strong>Schoenfeld et al. (2019)</strong> found hypertrophy increased across 1, 3 and 5 sets per exercise in 34 trained men; <strong>Pelland et al. (2026, <em>Sports Medicine</em> 56(2):481–505)</strong> put the posterior probability of a positive volume–hypertrophy slope at 100%; and <strong>the real Enes et al. (2024, <em>Med Sci Sports Exerc</em> 56(3):553–563, PMID 37796222)</strong> — a different paper from the one this section used to cite — randomised 31 trained males to constant volume or progressive set addition over 12 weeks and found progression produced <strong>greater strength</strong> (six-set &gt; four-set &gt; constant, all significant). Its hypertrophy outcomes were <strong>null between groups</strong> (CSA p = 0.067, thigh MT p = 0.076), and the authors caution that “the limited certainty of our findings warrants caution.” So the corrected citation cuts both ways: it removes a supporting leg from the flat-volume case and adds a contrary one — for <em>strength</em>, which is not this block’s primary outcome. The reconciliation is probably that the dose–response <strong>plateaus</strong>, and where you already sit on the curve decides whether added sets do anything. At 98 weekly sets with every priority muscle in the 10–13 range, you are not on the steep part of that curve.<br><br><strong>Three reasons flat wins here, in order of how well they are evidenced.</strong> First, <strong>two independent trials in trained lifters now favour maintenance</strong> — Barsuhn (above) and <strong>Moreno et al. (2025, <em>Eur J Appl Physiol</em>)</strong>, n = 42 recreationally trained, 12 weeks, which found increased volume and baseline-maintenance similarly effective for muscle thickness and 1RM at <em>every</em> measurement site. Different labs, same answer — which is a materially stronger position than the single high-dropout trial this section rested on before. Second, a 500 kcal deficit reduces recovery capacity, which shifts the cost–benefit of extra volume against you — <em>reasoning, not a tested finding</em>. Third, holding volume constant means load is the only thing changing, so a stalled lift is interpretable.<br><br><strong>One honest correction to the reasoning behind this choice.</strong> Flat volume was chosen partly as injury prevention, and <strong>that specific rationale is not evidenced</strong> — no study shows that adding four weekly sets raises injury risk in resistance training, and the running-injury literature found training-load management and prior injury history, not volume as such, to be the levers that matter (Peterson 2022). The decision is sound; the injury argument is the weakest of the reasons for it. <strong>Confidence in flat volume: upgraded from medium to high on review (31 Aug 2026)</strong> — it now rests on two independent trained-population RCTs rather than on one trial with 47% dropout. <strong>Confidence that accumulation would have been better: low</strong>, with the honest caveat that the real Enes 2024 does support progression for strength.<br><br><strong>If you ever want to test accumulation:</strong> add one set each to back, chest, side delts and quads in weeks 2 and 3 only, at the end of a session, light tier. If any lift on those muscles fails to match the previous week’s reps at the same load, that muscle drops straight back to week 1 volume. Twice for the same muscle means it does not tolerate added volume in a deficit.</div>
    <div class="note"><strong>Blocks after the first.</strong> Run four blocks (16 weeks) before changing exercises. Week 1 of each new block starts from the <em>loads</em> you finished the previous week 3 with. <strong>Sets never change</strong> — 98 every training week, halved only in deload. Load is the only variable that ratchets, which is what makes a stall interpretable.</div>
   </section>
-
   <section id="progress">
     <div class="sec-head">
       <span class="sec-num">06 — Progression</span>
@@ -1370,7 +1398,9 @@
     <div class="note is-key"><strong>Effort, defined precisely, because "close to failure" is where most programs get vague.</strong> <strong>Refalo et al. (2023, <em>Sports Medicine</em> 53(3):649–665, systematic review with meta-analysis, 15 studies)</strong> found a <em>trivial</em> hypertrophy advantage for sets closer to failure — ES 0.19 (95% CI 0.00–0.37, p = 0.045), with the lower bound touching zero, and the momentary-failure sub-analysis fully null at ES 0.12 (95% CI −0.13–0.37, p = 0.343) — and concluded there was “evidence for a potential <strong>non-linear</strong> relationship.” <span class="corr">⚠️ <strong>Correction, 31 Aug 2026.</strong> This paragraph previously cited a “follow-up meta-regression (Refalo 2024)” for the claim that the curve <em>flattens</em> by about 2 RIR. That paper is <strong>Robinson et al. (2024, <em>Sports Medicine</em> 54(9):2209–2231, PMID 38970765)</strong> — Refalo is its fourth author — and it reports the opposite: in every best-fit hypertrophy model the marginal slopes for estimated RIR were negative with confidence intervals excluding null, meaning growth kept rising as sets were terminated <em>closer</em> to failure. <strong>No paper anywhere identifies 2 RIR as an inflection point.</strong> Robinson is explicitly exploratory, of “modest quality of overall fit,” with RIR <em>estimated</em> from study descriptions rather than measured; and two RCTs in trained lifters (Refalo 2024, <em>J Sports Sci</em>; Martikainen 2025, <em>J Sci Sport Exerc</em>) found no difference at all. The evidence is genuinely split and is presented that way rather than resolved.</span> <strong>What this changes, and what it does not.</strong> The prescription stands: almost everything at <strong>0–2 RIR</strong>, with only the cheap sets taken to zero. What changes is the reason. Stopping short is no longer claimed as free — it is a <strong>deliberate purchase of lower fatigue and lower spinal risk</strong>, possibly at the cost of a small amount of growth that this literature is not powered to detect. That is a defensible trade for a forty-year-old training alone in a deficit, and an honest one. In this plan, <strong>true momentary failure is reached on exactly one set per exercise, on the final set of light-tier single-joint work only.</strong> Everything heavy, everything compound, everything axially loaded stops with reps in reserve — and the RDL stops with two or three.</div>
     <div class="note"><strong>The weekly landmine.</strong> If you are under-recovered — <em>not</em> merely if a session is running long — cut in this order and stop as soon as performance recovers: (1) Day 5 Smith lunge down to 2 sets, (2) Day 5 hip abduction down to 2 sets, (3) the third set of any light-tier isolation, (4) Day 1 face pull down to 2 sets. Calves and trunk are already last in every session, so if you simply run out of time they are what you lose — that is the design, not an accident. Do not touch the heavy tier, and do not touch anything that would take a muscle below two weekly exposures.</div>
   </section>
-
+  </div>
+  <div class="panel" id="fuel" role="region" aria-label="Fuel">
+    <p class="panel-blurb">Cardio placement, calories, protein, supplements, adherence</p>
   <section id="cardio">
     <div class="sec-head">
       <span class="sec-num">07 — Cardio</span>
@@ -1416,7 +1446,6 @@
     </div>
     <div class="note"><strong>Why the total is capped where it is.</strong> About <strong>28% of exercise-induced energy expenditure disappears to compensation</strong> (Careau) — mostly through NEAT falling. Adding cardio past this point produces less deficit than the arithmetic suggests while spending real recovery. If fat loss stalls, the correct lever is the diet or the step count, not another cardio session.</div>
   </section>
-
   <section id="nutrition">
     <div class="sec-head">
       <span class="sec-num">08 — Fuel</span>
@@ -1576,7 +1605,6 @@
     <div class="note is-key"><strong>Where to start, given you have not begun the deficit yet.</strong> Run <strong>week 1 at maintenance calories</strong>, not in deficit. The only job of week 1 is establishing honest loads across 25 exercises, and doing that while under-fuelled gives you a baseline that is too low — which then makes week 2 look like progress that is really just recovery. Start the deficit in <strong>week 2</strong>, once the numbers in your logbook mean something. <strong>Week 1 has a second job now: it is also the calibration week for the 2,700 kcal maintenance estimate.</strong> Eat at 2,700, weigh daily, and if the 7-day average has moved by week's end, correct the maintenance figure before subtracting the deficit from it.<br><br>This costs you about five days of fat loss and buys a clean baseline for a 16-week run. It also means your first deload lands in week 4 with three genuine weeks of deficit training behind it rather than two and a half.</div>
    <div class="note is-key"><strong>What the deficit changes about training, and what it does not — including the honest name for what this block is doing.</strong> Murphy &amp; Koehler found the deficit impaired lean mass gains but <strong>not strength</strong>, with the regression crossing zero at roughly 500 kcal/day. <strong>Read that second clause plainly: at the deficit this plan runs, the realistic objective is lean-mass <em>maintenance</em>, not accrual.</strong> That is not a downgrade of the plan — it is the plan’s own thesis stated in the right direction. Roth found that <em>holding</em> weekly sets is what tracked with little-to-no lean mass loss, and at 98 sets a week every priority muscle sits far above the threshold where loss stops. The volume is there to defend tissue, not to add it. The practical consequence is a change of success criterion: <strong>stop reading a flat scale-and-mirror month as failure, and stop optimising the last few percent of hypertrophy stimulus.</strong> The deficit, not the programme, is the binding constraint on growth — which is exactly why the one rule at the top of this document is that the deficit is the only thing that should get smaller. Practically: expect the logbook to keep moving even in weeks when the mirror does not. Load progression is the outcome that survives a cut, which is precisely why this program's progression rule is anchored to load rather than to how the session felt.</div>
   </section>
-
   <section id="supplements">
     <div class="sec-head">
       <span class="sec-num">09 — Supplements</span>
@@ -1650,7 +1678,6 @@
     <div class="note is-warn"><strong>⚠️ Two honesty notes that belong with this section.</strong> First: <strong>no deficit-stratified creatine meta-analysis exists in trained lifters.</strong> The case for creatine specifically <em>during a cut</em> is the general effect plus mechanistic plausibility — which is good enough to take it, but not good enough to claim a deficit-specific number, and this document will not invent one. Second: <strong>ISSN position stands are frequently authored by researchers with industry ties</strong>, which is why they are treated here as supporting consensus only and never as a sole source.</div>
     <div class="note is-key"><strong>If starting creatine, start it in week 1 — and do not start it mid-run.</strong> Creatine draws water into muscle, which manufactures roughly <strong>1.4 kg of apparent fat-free mass of unquantified water content</strong>. Beginning it at, say, week 7 would inject a fake gain straight into the middle of the measurement series and corrupt exactly the comparison the 3-week checkpoints exist to make. Start it alongside the maintenance calibration week, or not at all.</div>
   </section>
-
   <section id="adherence">
     <div class="sec-head">
       <span class="sec-num">10 — Adherence</span>
@@ -1725,7 +1752,22 @@
     <div class="note is-key"><strong>Flexible dieting over meal plans, but not for the reason it is usually given.</strong> The flexible-versus-rigid RCT (n = 23, resistance-trained, 20 weeks) found <strong>no body-composition difference during the diet phase</strong> — so flexibility is not a partitioning advantage and should not be sold as one. It is chosen here because adherence, not diet composition, is what separates outcomes at 12–16 weeks, and because a repeating-library approach with room for a social meal is the version this trainee will still be running in week 14. <strong>Any 80/20 rule in this document is a convention justified by micronutrients, fibre and satiety — not by partitioning.</strong></div>
     <div class="note"><strong>The satiety tools that do the most work per calorie</strong>, for an omnivore inside a 20 g saturated-fat ceiling: lean protein at every meal (the most satiating macronutrient per calorie), high-water-content vegetables in volume, potatoes and other low-energy-density starches, legumes and whole grains for fibre, and 0–2% Greek yoghurt and cottage cheese — which double as protein and as the fermented-dairy category the lipid evidence favours. <em>The satiety-index literature beyond these broad strokes has a weak replication record; treat specific food rankings with suspicion.</em></div>
   </section>
-
+  </div>
+  <div class="panel" id="evidence" role="region" aria-label="Evidence">
+    <p class="panel-blurb">The one rule, every citation graded, what the evidence overturns, and the constraints checked</p>
+  <section id="rule">
+    <div class="sec-head">
+      <span class="sec-num">The one rule</span>
+      <h2>The deficit is the only thing that should get smaller</h2>
+    </div>
+    <div class="note is-key"><strong>Murphy &amp; Koehler (2022, <em>Scand J Med Sci Sports</em>, meta-analysis and meta-regression of RCTs ≥3 weeks)</strong> found that training in an energy deficit impairs gains in lean mass but <strong>not strength</strong>, and that the regression crossed zero at roughly <strong>500 kcal·day⁻¹</strong> — beyond that deficit, lean mass gains stopped. Independently, <strong>Roth, Schoenfeld &amp; Behringer (2022, <em>Eur J Appl Physiol</em>, 15 studies of resistance-trained athletes in caloric restriction)</strong> found that holding <strong>at least 10 weekly sets per muscle</strong> and not cutting volume as calories drop was what tracked with little-to-no lean mass loss.</div>
+    <div class="col">
+      <p class="thesis">Two numbers govern this entire document: the deficit stays at or under 500 kcal, and the weekly set count never gets cut because you feel flat. Everything else on this page is downstream of those.</p>
+      <p>This matters because the instinct in a cut runs the other way. Training feels worse, sessions feel longer, and the natural response is to trim sets and add cardio. Both meta-analyses above say that is the exact inversion of what works: the deficit is the variable to keep small, and the volume is the variable to defend.</p>
+      <p>The second constraint shaping every page here is the lumbar spine. It is not treated as a mobility problem to be stretched away — it is treated as a <em>loading budget</em>. Axial load is spent deliberately on the two or three lifts that genuinely need it, and every other slot in the week is filled with a supported or machine-based alternative that buys the same hypertrophy at a lower spinal cost.</p>
+    </div>
+    <div class="note"><strong>What changed from the previous revision, and why.</strong> The prior plan was audited against nine constraints and failed three of them outright. It had <strong>no periodisation at all</strong> — no accumulation, no deload. It had <strong>no stated progression rule</strong> — rep ranges and RIR but no trigger for adding load or sets. And <strong>seven muscles were trained once a week</strong>: chest, glutes, biceps, front delts, rear delts, abs, and each calf head individually. Weekly volume has barely moved. What moved is how it is distributed, and what tells you when to change it. The full audit is in the <em>Validation</em> tab.</div>
+  </section>
   <section id="challenge">
     <div class="sec-head">
       <span class="sec-num">11 — Challenge register</span>
@@ -1831,7 +1873,6 @@
       </table>
     </div>
   </section>
-
   <section id="appendix">
     <div class="sec-head">
       <span class="sec-num">12 — Evidence appendix</span>
@@ -1919,7 +1960,6 @@
     <div class="note is-warn"><strong>⚠️ The structural caveat, added 31 Aug 2026 — read this before any individual row above.</strong> A count of meta-analyses in the table above overstates how independent this evidence base actually is. <strong>One laboratory or its immediate collaborators co-author the load-bearing citations for load, frequency, range of motion, lateral-raise implement, deload, and the volume dose–response.</strong> A second overlapping cluster produced essentially the entire proximity-to-failure literature. A third produced the partial-range studies and frequently co-publishes with the first. Even the statistical scrutiny is shared — the same methodologist appears across several of these groups’ papers. Disclosed competing interests recur: advisory-board seats at fitness-equipment manufacturers, a training-company cofounder, several authors earning income as industry writers, and all five authors of the single most load-bearing dose–response citation describing themselves as “coaches and writers in the fitness industry.” <strong>None of this is disqualifying, and none of it was hidden — every one of those disclosures is printed in the papers themselves.</strong> But it means this is roughly three or four densely cross-published groups rather than a field-wide consensus, and a finding that is overstated in that network propagates across many nominally separate papers because the same people and the same primary datasets recur. Where a claim in this document is carried by a genuinely independent group — Martikainen (Jyväskylä) on proximity to failure, Moreno (USF) on volume maintenance, Márquez (Granada) on paired sets, Arntz (no Warneke) on stretching — that is now said explicitly, because it is the strongest form of evidence available here.</div>
     <div class="note is-warn"><strong>Three citations carry explicit caveats and should not be load-bearing on their own.</strong> <strong>Enes (2025)</strong> was read as a preprint — the published version was not accessible, and it is the primary justification for the short warm-up. <strong>Oliva (2026)</strong>, cited once in the warm-up section, is a self-described pilot whose sample size could not be confirmed. <strong>Coleman (2024)</strong> is the only RCT on deloading and it points <em>against</em> the choice made here — the reasoning for overriding it is set out in full in <em>The block</em>, and it is graded Low for exactly that reason. Separately, the RAMP warm-up protocol, widely cited in coaching, is published in a non-peer-reviewed trade magazine and is deliberately cited nowhere in this document.</div>
   </section>
-
   <section id="validation">
     <div class="sec-head">
       <span class="sec-num">13 — Validation</span>
@@ -2039,7 +2079,6 @@
     </div>
     <div class="note is-key"><strong>Two structural checks, run against the tables above rather than asserted.</strong> <strong>Set reconciliation:</strong> session totals 19 + 22 + 16 + 20 + 21 = 98, and the thirteen muscle rows in <em>Weekly totals</em> sum to 98. The Smith lunge is counted as 3 glute sets and 1 quad set across its 4 sets, not 4 of each — this is the exact arithmetic that produced a false "rear delts are undertrained" conclusion in the previous revision. <strong>Time budget (recalculated 29 Aug 2026):</strong> longest door-to-door session is Day 1 at ~90 minutes (64 lifting including ramps + 25 Zone 2); the longest lifting-only sessions are Days 2 and 6 at ~73 minutes. The first logged session, Day 6, actually took 108 minutes — see the totals note. <strong>Per-session concentration:</strong> the heaviest single-muscle dose in the week is chest at 9 sets on Day 3, below the ~11-set point where per-session returns flatten (Remmert 2025, preprint).</div>
   </section>
-
   <section id="practical">
     <div class="sec-head">
       <span class="sec-num">14 — Practical notes</span>
@@ -2096,9 +2135,58 @@
     <div class="note is-warn"><strong>⚠️ You train alone, so three lifts have a modified failure rule.</strong> The failure rule elsewhere in this document — final set of light-tier single-joint work goes to momentary failure — assumes you can fail a rep safely. Three lifts do not qualify, and none of them was a failure lift anyway; this makes it explicit rather than implied.<br><br><strong>Flat dumbbell bench press (Day 6)</strong> — stop at 1–2 RIR, always. A failed rep here means dropping dumbbells from a supine position with no one to take them. If you cannot set the dumbbells down under control at the end of a set, the load is too heavy regardless of how the reps felt. <strong>Incline dumbbell press (Day 3)</strong> — same rule, same reason. <strong>Romanian deadlift (Day 2)</strong> — already capped at 2–3 RIR and flagged never-to-zero; training alone is a second reason, not a new one.<br><br>Everything taken to failure in this plan is a machine or a cable: pec deck, lateral raises, pushdowns, curls, leg extension, leg curl, face pull, standing calf raise. All of them can be failed safely with the weight going nowhere dangerous. That is not a coincidence — it is why the failure sets were put where they were.</div>
    <div class="note is-warn"><strong>What is explicitly not in this plan, and will not be added.</strong> No second chest press, no third row variation, no barbell back squat or conventional deadlift, no unsupported bent-over rowing, no cable kickbacks, no seated calf raise, no B-stance hip thrust, no second rear-delt or ab day, no behind-the-neck pressing or pulling, no static stretching before lifting, no foam rolling, no pre-workout mobility circuit, no post-activation potentiation protocol (Xu 2025, <em>Sports Medicine</em>, 62 studies: effect size 0.12, shrinking as training status rises, and not one measured outcome was hypertrophy), and no fourth ramping set on anything. Each of these was considered and rejected on the evidence, not on preference.</div>
   </section>
-
+  </div>
   <footer>
     <p>Proposed protocol, built for a 40-year-old intermediate–advanced lifter in a fat-loss phase, with lumbar-sparing constraints. Every dose in this document is traceable to a citation in the evidence appendix, and every citation is graded. Three are flagged as caveated and one — the deload — points against the choice made here; the reasoning for overriding it is stated rather than buried.</p>
     <p>General training and nutrition analysis, not medical advice. If you have a diagnosed lumbar condition, this document is not a substitute for a clinician who can examine you.</p>
   </footer>
 </div>
+<script>
+(function () {
+  var b = document.body; b.classList.add('js');
+  var tabs = [].slice.call(document.querySelectorAll('.tab[data-tab]'));
+  var panels = [].slice.call(document.querySelectorAll('.panel'));
+  function show(slug, push) {
+    if (!document.getElementById(slug)) slug = tabs[0].dataset.tab;
+    panels.forEach(function (p) { p.hidden = (p.id !== slug); });
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === slug); });
+    if (push && location.hash.slice(1) !== slug) history.pushState(null, '', '#' + slug);
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      show(t.dataset.tab, true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  window.addEventListener('popstate', function () { show(location.hash.slice(1), false); });
+  // In-page links to another tab's panel (e.g. href="#fourday") change the hash
+  // without a popstate, so the panel would stay hidden. Switch tabs on hashchange too.
+  window.addEventListener('hashchange', function () {
+    show(location.hash.slice(1), false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  show(location.hash.slice(1) || tabs[0].dataset.tab, false);
+
+  var ev = document.getElementById('ev-toggle');
+  var boxes = [].slice.call(document.querySelectorAll('details.evidence'));
+  ev.addEventListener('click', function (e) {
+    e.preventDefault();
+    var open = ev.getAttribute('aria-pressed') !== 'true';
+    // Hold scroll position. Anchor to the section you are currently reading —
+    // sections are stable containers, unlike anything inside a box that is
+    // itself expanding.
+    var blocks = [].slice.call(
+      document.querySelectorAll('.panel:not([hidden]) > section > *'));
+    var anchor = null, before = 0;
+    blocks.forEach(function (el) {
+      var top = el.getBoundingClientRect().top;
+      if (top <= 120) { anchor = el; before = top; }
+    });
+    boxes.forEach(function (d) { d.open = open; });
+    ev.setAttribute('aria-pressed', open);
+    ev.textContent = open ? 'Hide evidence' : 'Show evidence';
+    if (anchor) { window.scrollBy(0, anchor.getBoundingClientRect().top - before); }
+  });
+})();
+</script>
+
