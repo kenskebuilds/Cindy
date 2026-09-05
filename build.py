@@ -14,21 +14,14 @@ head_bits, body = frag[:i], frag[i:]
 title = re.search(r'<title>([^<]*)</title>', head_bits).group(1)
 head_bits = head_bits.replace(u'<title>%s</title>' % title, u'')
 
-# The artifact build keeps the head exactly as authored - theme-aware, no palette
-# swap. Snapshot it before the static page's light-theme surgery below.
+# Both builds keep the head exactly as authored, including the dark-theme blocks.
+# head_themed is the artifact's copy: authored palette, untouched.
 head_themed = head_bits
 
-# Force light theme: the artifact stays theme-aware, the static page does not.
-# Strip the prefers-color-scheme dark block and the [data-theme="dark"] override.
-head_bits = re.sub(
-    r'\n  @media \(prefers-color-scheme: dark\) \{.*?\n  \}\n', u'\n',
-    head_bits, flags=re.S)
-head_bits = re.sub(
-    r'\n  :root\[data-theme="dark"\] \{.*?\n  \}\n', u'\n',
-    head_bits, flags=re.S)
-
-# Calmer light palette for the standalone page: a real grey ground so the
-# off-white cards read as surfaces, and stronger rules for separation.
+# The static page follows the viewer's system theme too - it is NOT forced light.
+# What it does change is the *light* palette: a real grey ground so the off-white
+# cards read as surfaces, and stronger rules for separation. None of these tokens
+# appear inside the dark blocks, so the swap leaves dark mode untouched.
 TONED = [
     (u'--ground:#F5F7F9',     u'--ground:#E7ECF1'),
     (u'--surface:#FFFFFF',    u'--surface:#F9FBFC'),
@@ -182,6 +175,7 @@ TAB_JS = u"""
 """
 
 RESET = u"""
+  :root{color-scheme:light dark}
   *,*::before,*::after{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
   body{margin:0}
@@ -202,8 +196,9 @@ page = u"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Citation-graded 5-day hypertrophy protocol for a lifter in a caloric deficit, built around a lumbar loading budget.">
-<meta name="theme-color" content="#F5F7F9">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#E7ECF1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1418" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="%s">
 <link rel="apple-touch-icon" href="%s">
 <title>%s</title>
@@ -246,4 +241,4 @@ io.open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write(
     u"User-agent: *\nDisallow: /\n")
 io.open(os.path.join(OUT, ".nojekyll"), "w", encoding="utf-8").write(u"")
 io.open(os.path.join(OUT, "README.md"), "w", encoding="utf-8").write(
-    u"# The Deficit Hypertrophy Protocol\n\nA 5-day training split for a 40-year-old intermediate-advanced lifter in a caloric deficit. Primary outcome is hypertrophy; fat loss is secondary and handled by the diet. Every dose is traced to a citation, every citation is graded high/medium/low, and the plan is checked against nine explicit constraints in a validation report rather than asserted.\n\nOpen `index.html`, or serve via GitHub Pages.\n\n## Build\n\n    python build.py\n\nSource of truth is `src/protocol.html`. `build.py` wraps it into the standalone page, forces the light theme, and groups the twelve sections into four tabs. Every section must be assigned to a tab in `TABS` or the build aborts.\n\n## Notes\n\n- `robots.txt` and a `noindex` meta tag are included to discourage search indexing. They are not access control - anything on a public GitHub Pages site is publicly readable.\n- Single self-contained file. The only external request is Google Fonts.\n- General training and nutrition analysis, not medical advice.\n")
+    u"# The Deficit Hypertrophy Protocol\n\nA 5-day training split for a 40-year-old intermediate-advanced lifter in a caloric deficit. Primary outcome is hypertrophy; fat loss is secondary and handled by the diet. Every dose is traced to a citation, every citation is graded high/medium/low, and the plan is checked against nine explicit constraints in a validation report rather than asserted.\n\nOpen `index.html`, or serve via GitHub Pages. `build.py` emits two files from the same source: `index.html` for GitHub Pages and `artifact.html` (a head/body-less fragment) for claude.ai.\n\n## Build\n\n    python build.py\n\nSource of truth is `src/protocol.html`. `build.py` wraps it into the standalone page and groups the sections into tabs. Both outputs follow the viewer's system theme; the standalone page additionally swaps in a slightly deeper *light* palette so the off-white cards read as surfaces against a grey ground. Every section must be assigned to a tab in `TABS` or the build aborts.\n\n## Notes\n\n- `robots.txt` and a `noindex` meta tag are included to discourage search indexing. They are not access control - anything on a public GitHub Pages site is publicly readable.\n- Single self-contained file. The only external request is Google Fonts.\n- General training and nutrition analysis, not medical advice.\n")
