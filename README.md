@@ -1,6 +1,6 @@
 # The Deficit Hypertrophy Protocol
 
-A 5-day training split for a 40-year-old intermediate-advanced lifter in a caloric deficit. Primary outcome is hypertrophy; fat loss is secondary and handled by the diet. Every dose is traced to a citation, every citation is graded high/medium/low, and the plan is checked against nine explicit constraints in a validation report rather than asserted.
+A 5-day training split for a 40-year-old intermediate-advanced lifter in a caloric deficit. Primary outcome is hypertrophy; fat loss is secondary and handled by the diet. Every dose is traced to a citation, every citation is graded high/medium/low, and the plan is checked against fifteen explicit constraints in a validation report rather than asserted.
 
 Open `index.html`, or serve via GitHub Pages. `build.py` emits two files from the same source: `index.html` for GitHub Pages and `artifact.html` (a head/body-less fragment) for claude.ai.
 
