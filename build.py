@@ -291,8 +291,7 @@ TAB_JS = u"""
   }
   tabs.forEach(function (t) {
     t.addEventListener('click', function () {
-      show(t.dataset.tab, true);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      show(t.dataset.tab, true); // switch panel only; keep scroll position
     });
   });
   window.addEventListener('popstate', function () { show(location.hash.slice(1), false); });
