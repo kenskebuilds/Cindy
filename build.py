@@ -48,7 +48,7 @@ TABS = [
      [u'weekly']),
     (u'plan',        u'The Plan',    u'Warm-up and the five lifting days',
      [u'warmup', u'routine']),
-    (u'fourday',     u'4-Day Variant', u'The same 98 sets in four sessions — a volume-matched trial plan that co-exists with the five-day',
+    (u'fourday',     u'4-Day Variant', u'98 sets in four sessions, against the five-day’s 100 — a near volume-matched trial plan that co-exists with the five-day',
      [u'fourday']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
      [u'loading', u'block', u'progress']),
@@ -77,7 +77,8 @@ if orphans:
 # anything is written. Three sources must agree, or the build stops:
 #   1. the five-day Weekly totals table (direct and effective per muscle),
 #   2. the tiles in each muscle row (solid = 1 per set, dashed = 1/2 per set)
-#      and the "direct + indirect = total" figures printed beside them,
+#      and the "direct + indirect = total" figures printed beside them, plus the
+#      frequency (days with direct tiles), the D1-D5 strip and the bar beside them,
 #   3. the routine tables (each tile's day, exercise and set count).
 # Tiles use a few shortened exercise names; map them back to the routine's.
 TILE_NAMES = {
@@ -106,9 +107,11 @@ def check_volume_drift():
     weekly, routine = sections[u'weekly'], sections[u'routine']
 
     table = {}
+    table_freq = {}
     for m in re.finditer(r'<tr><td class="c-move">([^<]*)</td><td class="c-load">([^<]*)</td>'
-                         r'<td class="c-load">([^<]*)</td>', weekly):
+                         r'<td class="c-load">([^<]*)</td><td class="c-rir">(\d)×</td>', weekly):
         table[m.group(1)] = (_num(m.group(2)), _num(m.group(3)))
+        table_freq[m.group(1)] = int(m.group(4))
     if not table:
         return [u'could not find the Weekly totals table in section "weekly"']
 
@@ -174,6 +177,32 @@ def check_volume_drift():
         if direct + indirect != t_eff:
             errors.append(u'%s: tiles add up to %s total (%s direct + %s indirect); the table\'s effective is %s'
                           % (muscle, _fmt(direct + indirect), _fmt(direct), _fmt(indirect), _fmt(t_eff)))
+        # Frequency rule: "x a week" = number of days with DIRECT (solid) tiles. Days with only
+        # dashed tiles are half credit and do not count. The day strip must show the same days.
+        solid_days = sorted({int(t.group(2)) for t in tiles if not t.group(1)})
+        half_days = sorted({int(t.group(2)) for t in tiles if t.group(1)} - set(solid_days))
+        fm = re.search(u'vm-freq">(\\d)× a week', html)
+        if not fm or int(fm.group(1)) != len(solid_days):
+            errors.append(u'%s: the row says %s× a week; direct sets fall on %d day(s) (%s)'
+                          % (muscle, fm.group(1) if fm else u'(missing)', len(solid_days),
+                             u', '.join(u'D%d' % d for d in solid_days)))
+        if table_freq.get(muscle) != len(solid_days):
+            errors.append(u'%s: the Weekly totals table says %s×; direct sets fall on %d day(s)'
+                          % (muscle, table_freq.get(muscle), len(solid_days)))
+        strip = re.findall(u'<i class="vm-d( is-full| is-half)?">(\\d)</i>', html)
+        strip_full = sorted(int(n) for c, n in strip if c == u' is-full')
+        strip_half = sorted(int(n) for c, n in strip if c == u' is-half')
+        if strip_full != solid_days or strip_half != half_days:
+            errors.append(u'%s: the D1-D5 strip shows direct on %s and indirect-only on %s; the tiles say %s and %s'
+                          % (muscle, strip_full, strip_half, solid_days, half_days))
+        bar = re.search(u'vm-bar" role="img" aria-label="([^"]*?) total sets', html)
+        fills = re.findall(u'vm-fill( is-half)?" style="([^"]*)"', html)
+        want_fills = [(u'', u'width:%g%%' % (direct * 5))]
+        if indirect:
+            want_fills.append((u' is-half', u'left:%g%%;width:%g%%' % (direct * 5, indirect * 5)))
+        if not bar or _num(bar.group(1)) != direct + indirect or fills != want_fills:
+            errors.append(u'%s: the bar (label "%s", fills %s) does not match %s total on the 0-20 scale'
+                          % (muscle, bar.group(1) if bar else u'(missing)', fills, _fmt(direct + indirect)))
         for cls, want in ((u'is-direct', direct), (u'is-indirect', indirect), (u'is-total', direct + indirect)):
             fm = re.search(u'vm-term %s[^"]*"><b>([^<]*)</b>' % cls, html)
             shown = _num(fm.group(1)) if fm else None
