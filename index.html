@@ -221,18 +221,35 @@
   .vm-key > span { display:inline-flex; align-items:center; gap:.5rem; }
   .vm-group { display:flex; flex-direction:column; }
   .vm-group h3 { margin:.4rem 0 .35rem; font-size:.78rem; font-family:var(--f-mono); font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
-  .vm-row { display:grid; grid-template-columns:minmax(12.5rem,15rem) 1fr; gap:.9rem 1.75rem; padding:1rem 0 1.1rem; border-top:1px solid var(--rule); align-items:start; }
-  .vm-total { display:grid; grid-template-columns:auto 1fr; column-gap:.85rem; row-gap:.3rem; align-items:baseline; }
-  .vm-name { grid-column:1 / -1; font-family:var(--f-display); font-weight:600; font-size:1.02rem; letter-spacing:-.005em; line-height:1.2; }
-  .vm-num { font-family:var(--f-display); font-weight:700; font-size:2.5rem; line-height:.95; letter-spacing:-.03em; font-variant-numeric:tabular-nums; color:var(--ink); }
-  .vm-num small { display:block; font-family:var(--f-mono); font-weight:500; font-size:.6rem; letter-spacing:.06em; color:var(--ink-3); margin-top:.3rem; }
-  .vm-split { font-family:var(--f-mono); font-size:.72rem; color:var(--ink-2); align-self:start; padding-top:.35rem; }
-  .vm-freq { grid-column:1 / -1; display:flex; align-items:center; gap:.6rem; font-family:var(--f-mono); font-size:.72rem; font-weight:600; color:var(--ink-2); margin-top:.35rem; }
+  .vm-row { display:grid; grid-template-columns:minmax(13.5rem,15rem) 1fr; gap:.9rem 1.75rem; padding:1rem 0 1.1rem; border-top:1px solid var(--rule); align-items:start; }
+  .vm-total { display:flex; flex-direction:column; gap:.45rem; }
+  .vm-name { font-family:var(--f-display); font-weight:600; font-size:1.02rem; letter-spacing:-.005em; line-height:1.2; }
+  /* direct + indirect = total, read left to right; total is the largest figure but comes last */
+  .vm-sum { display:grid; grid-template-columns:repeat(5,auto); justify-content:start; align-items:baseline; column-gap:.5rem; row-gap:.2rem; margin-top:.1rem; }
+  .vm-term { display:contents; }
+  .vm-term b, .vm-term small { justify-self:center; }
+  .vm-term b { grid-row:1; font-family:var(--f-display); font-weight:600; font-size:1.4rem; line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .vm-term small { grid-row:2; display:flex; align-items:center; gap:.3rem; font-family:var(--f-mono); font-weight:500; font-size:.62rem; letter-spacing:.04em; color:var(--ink-3); white-space:nowrap; }
+  .vm-term small::before { content:""; width:.6rem; height:.25rem; border-radius:1px; }
+  .vm-term.is-direct b { color:var(--accent); }
+  .vm-term.is-direct small::before { background:var(--accent); }
+  .vm-term.is-indirect b { color:var(--ink-2); }
+  .vm-term.is-indirect small::before { background:color-mix(in srgb, var(--accent) 38%, transparent); }
+  .vm-term.is-none b, .vm-term.is-none small { opacity:.45; }
+  .vm-term.is-total b { font-weight:700; font-size:2.5rem; line-height:.9; letter-spacing:-.03em; color:var(--ink); }
+  .vm-term.is-total small::before { display:none; }
+  .vm-term.is-direct b, .vm-term.is-direct small { grid-column:1; }
+  .vm-term.is-indirect b, .vm-term.is-indirect small { grid-column:3; }
+  .vm-term.is-total b, .vm-term.is-total small { grid-column:5; }
+  .vm-op { grid-row:1; font-family:var(--f-display); font-size:1.1rem; line-height:1; color:var(--ink-3); }
+  .vm-op.is-plus { grid-column:2; }
+  .vm-op.is-eq { grid-column:4; }
+  .vm-freq { display:flex; align-items:center; gap:.6rem; font-family:var(--f-mono); font-size:.72rem; font-weight:600; color:var(--ink-2); margin-top:.15rem; }
   .vm-days { display:inline-flex; gap:3px; }
   .vm-d { display:grid; place-items:center; width:1.1rem; height:1.1rem; border:1px solid var(--rule); border-radius:2px; font-family:var(--f-mono); font-style:normal; font-size:.56rem; font-weight:600; color:var(--ink-3); opacity:.7; }
   .vm-d.is-full { background:var(--accent); border-color:var(--accent); color:var(--surface); opacity:1; }
   .vm-d.is-half { border:1.5px solid var(--accent); color:var(--accent); opacity:1; }
-  .vm-bar { grid-column:1 / -1; position:relative; display:block; height:.5rem; margin-top:.45rem; background:var(--surface-2); border-radius:1px; overflow:hidden; }
+  .vm-bar { position:relative; display:block; height:.5rem; margin-top:.1rem; background:var(--surface-2); border-radius:1px; overflow:hidden; }
   .vm-zone { position:absolute; top:0; bottom:0; left:25%; width:65%; background:color-mix(in srgb, var(--keep) 22%, transparent); border-left:1px solid var(--keep); border-right:1px solid var(--keep); }
   .vm-fill { position:absolute; top:.1rem; bottom:.1rem; left:0; background:var(--accent); }
   .vm-fill.is-half { background:color-mix(in srgb, var(--accent) 38%, transparent); }
@@ -251,7 +268,7 @@
   .vm-full > .col, .vm-full > .scroller { margin-top:1rem; }
   @media (max-width:40rem) {
     .vm-row { grid-template-columns:1fr; gap:.75rem; }
-    .vm-num { font-size:2.2rem; }
+    .vm-term.is-total b { font-size:2.2rem; }
     .vm-x { font-size:.82rem; }
   }
 </style>
@@ -261,7 +278,7 @@
   <header class="masthead">
     <p class="eyebrow">Proposed Protocol · Fat-Loss Phase · Age 40 · Intermediate–Advanced</p>
     <h1>The Deficit Hypertrophy Protocol</h1>
-    <p class="standfirst">Five lifting days and two cardio days, built to hold muscle and training performance through a calorie deficit without asking a forty-year-old lumbar spine to carry the load. Muscle retention is the floor; at the revised 250 kcal deficit, modest growth is a realistic aim rather than a bonus. Every exercise justified by unique stimulus, every dose traced to a citation, and a validation report that shows its working.</p>
+    <p class="standfirst">Five lifting days, built to hold muscle and training performance through a calorie deficit without asking a forty-year-old lumbar spine to carry the load. Muscle retention is the floor; at the revised 250 kcal deficit, modest growth is a realistic aim rather than a bonus. Every exercise justified by unique stimulus, every dose traced to a citation, and a validation report that shows its working.</p>
     <div class="vitals">
       <span>Mass <b>75 kg</b></span>
       <span>Body fat <b>20%+</b></span>
@@ -289,25 +306,29 @@
     <p class="panel-blurb">Weekly sets per muscle, and the exercises that add up to them</p>
   <section id="weekly">
     <div class="sec-head">
-      <span class="sec-num">Weekly totals</span>
+      <span class="sec-num">01 — Weekly totals</span>
       <h2>What each muscle actually gets, and how often</h2>
     </div>
-    <p class="vm-lead">Each muscle’s weekly total on the left, and the exercises that add up to it on the right.</p>
+    <p class="vm-lead">Each muscle’s weekly sets on the left, and the exercises that add up to them on the right.</p>
     <div class="vm-key">
-      <span><span class="vm-x vm-x-mini">4</span> Main muscle: each set counts 1</span>
-      <span><span class="vm-x vm-x-mini is-half">4 × ½</span> Helping muscle: each set counts ½</span>
-      <span><span class="vm-days" aria-hidden="true"><i class="vm-d is-full">1</i><i class="vm-d is-half">2</i><i class="vm-d">3</i></span> Days: main sets, ½ only, none</span>
+      <span><span class="vm-x vm-x-mini">4</span> Direct: each set counts 1</span>
+      <span><span class="vm-x vm-x-mini is-half">4 × ½</span> Indirect: each set counts ½</span>
+      <span>Total = direct + ½ × indirect sets (the table’s “effective”)</span>
+      <span><span class="vm-days" aria-hidden="true"><i class="vm-d is-full">1</i><i class="vm-d is-half">2</i><i class="vm-d">3</i></span> Days: direct sets, indirect only, none</span>
       <span><span class="vm-bar vm-bar-mini" aria-hidden="true"><span class="vm-zone"></span></span> Shaded: 5–18 sets, Pelland’s higher and intermediate efficiency tiers</span>
     </div>
     <div class="vm-group">
       <h3>Push</h3>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Triceps">
         <div class="vm-total">
           <span class="vm-name">Triceps</span>
-          <span class="vm-num">13<small>sets a week</small></span>
-          <span class="vm-split">6 main + 7 helping</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 not trained, Day 3 main sets, Day 4 not trained, Day 5 main sets"><i class="vm-d">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="13 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span><span class="vm-fill is-half" style="left:30%;width:35%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>6</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect"><b>7</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>13</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 not trained, Day 3 direct sets, Day 4 not trained, Day 5 direct sets"><i class="vm-d">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="13 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span><span class="vm-fill is-half" style="left:30%;width:35%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D3</b><span class="vm-ex">Overhead Cable Extension</span><span class="vm-sets">3</span></li>
@@ -318,13 +339,16 @@
           <li class="vm-x is-half"><b class="vm-day">D5</b><span class="vm-ex">Machine Shoulder Press</span><span class="vm-sets">4 × ½</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Chest">
         <div class="vm-total">
           <span class="vm-name">Chest</span>
-          <span class="vm-num">12<small>sets a week</small></span>
-          <span class="vm-split">12 main</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 not trained, Day 3 main sets, Day 4 not trained, Day 5 main sets"><i class="vm-d">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="12 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:60%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>12</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>12</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 not trained, Day 3 direct sets, Day 4 not trained, Day 5 direct sets"><i class="vm-d">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="12 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:60%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D3</b><span class="vm-ex">Incline DB Press</span><span class="vm-sets">3</span></li>
@@ -333,13 +357,16 @@
           <li class="vm-x"><b class="vm-day">D5</b><span class="vm-ex">Flat DB Bench Press</span><span class="vm-sets">3</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Side delts">
         <div class="vm-total">
           <span class="vm-name">Side delts</span>
-          <span class="vm-num">11<small>sets a week</small></span>
-          <span class="vm-split">9 main + 2 helping</span>
-          <span class="vm-freq">3× a week <span class="vm-days" role="img" aria-label="Day 1 main sets, Day 2 not trained, Day 3 main sets, Day 4 not trained, Day 5 main sets"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="11 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:45%"></span><span class="vm-fill is-half" style="left:45%;width:10%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>9</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect"><b>2</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>11</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">3× a week <span class="vm-days" role="img" aria-label="Day 1 direct sets, Day 2 not trained, Day 3 direct sets, Day 4 not trained, Day 5 direct sets"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="11 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:45%"></span><span class="vm-fill is-half" style="left:45%;width:10%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D1</b><span class="vm-ex">Machine Lateral Raise</span><span class="vm-sets">3</span></li>
@@ -348,13 +375,16 @@
           <li class="vm-x is-half"><b class="vm-day">D5</b><span class="vm-ex">Machine Shoulder Press</span><span class="vm-sets">4 × ½</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Front delts">
         <div class="vm-total">
           <span class="vm-name">Front delts</span>
-          <span class="vm-num">9<small>sets a week</small></span>
-          <span class="vm-split">4 main + 5 helping</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 not trained, Day 3 half credit only, Day 4 not trained, Day 5 main sets"><i class="vm-d">1</i><i class="vm-d">2</i><i class="vm-d is-half">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="9 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:20%"></span><span class="vm-fill is-half" style="left:20%;width:25%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>4</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect"><b>5</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>9</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 not trained, Day 3 indirect only, Day 4 not trained, Day 5 direct sets"><i class="vm-d">1</i><i class="vm-d">2</i><i class="vm-d is-half">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="9 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:20%"></span><span class="vm-fill is-half" style="left:20%;width:25%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D5</b><span class="vm-ex">Machine Shoulder Press</span><span class="vm-sets">4</span></li>
@@ -366,13 +396,16 @@
     </div>
     <div class="vm-group">
       <h3>Pull</h3>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Biceps">
         <div class="vm-total">
           <span class="vm-name">Biceps</span>
-          <span class="vm-num">13½<small>sets a week</small></span>
-          <span class="vm-split">7 main + 6½ helping</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 main sets, Day 2 not trained, Day 3 main sets, Day 4 not trained, Day 5 half credit only"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-half">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="13½ sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:35%"></span><span class="vm-fill is-half" style="left:35%;width:32.5%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>7</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect"><b>6½</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>13½</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 direct sets, Day 2 not trained, Day 3 direct sets, Day 4 not trained, Day 5 indirect only"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d is-full">3</i><i class="vm-d">4</i><i class="vm-d is-half">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="13½ total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:35%"></span><span class="vm-fill is-half" style="left:35%;width:32.5%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D1</b><span class="vm-ex">Incline DB Curl</span><span class="vm-sets">4</span></li>
@@ -383,13 +416,16 @@
           <li class="vm-x is-half"><b class="vm-day">D5</b><span class="vm-ex">Iso-Lateral Low Row</span><span class="vm-sets">3 × ½</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Lats / back">
         <div class="vm-total">
           <span class="vm-name">Lats</span>
-          <span class="vm-num">13<small>sets a week</small></span>
-          <span class="vm-split">13 main</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 main sets, Day 2 not trained, Day 3 not trained, Day 4 not trained, Day 5 main sets"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="13 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:65%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>13</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>13</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 direct sets, Day 2 not trained, Day 3 not trained, Day 4 not trained, Day 5 direct sets"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d">3</i><i class="vm-d">4</i><i class="vm-d is-full">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="13 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:65%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D1</b><span class="vm-ex">Lat Pulldown</span><span class="vm-sets">4</span></li>
@@ -398,13 +434,16 @@
           <li class="vm-x"><b class="vm-day">D5</b><span class="vm-ex">Iso-Lateral Low Row</span><span class="vm-sets">3</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Rear delts">
         <div class="vm-total">
           <span class="vm-name">Rear delts</span>
-          <span class="vm-num">10½<small>sets a week</small></span>
-          <span class="vm-split">6 main + 4½ helping</span>
-          <span class="vm-freq">1× a week <span class="vm-days" role="img" aria-label="Day 1 main sets, Day 2 not trained, Day 3 not trained, Day 4 not trained, Day 5 half credit only"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d">3</i><i class="vm-d">4</i><i class="vm-d is-half">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="10½ sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span><span class="vm-fill is-half" style="left:30%;width:22.5%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>6</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect"><b>4½</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>10½</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">1× a week <span class="vm-days" role="img" aria-label="Day 1 direct sets, Day 2 not trained, Day 3 not trained, Day 4 not trained, Day 5 indirect only"><i class="vm-d is-full">1</i><i class="vm-d">2</i><i class="vm-d">3</i><i class="vm-d">4</i><i class="vm-d is-half">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="10½ total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span><span class="vm-fill is-half" style="left:30%;width:22.5%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D1</b><span class="vm-ex">Cable Face Pull</span><span class="vm-sets">3</span></li>
@@ -417,13 +456,16 @@
     </div>
     <div class="vm-group">
       <h3>Legs</h3>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Glute max">
         <div class="vm-total">
           <span class="vm-name">Glute max</span>
-          <span class="vm-num">14<small>sets a week</small></span>
-          <span class="vm-split">12 main + 2 helping</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 main sets, Day 3 not trained, Day 4 main sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="14 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:60%"></span><span class="vm-fill is-half" style="left:60%;width:10%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>12</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect"><b>2</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>14</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 direct sets, Day 3 not trained, Day 4 direct sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="14 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:60%"></span><span class="vm-fill is-half" style="left:60%;width:10%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D2</b><span class="vm-ex">Smith Lunge</span><span class="vm-sets">4</span></li>
@@ -432,13 +474,16 @@
           <li class="vm-x is-half"><b class="vm-day">D2</b><span class="vm-ex">Hack Squat or Leg Press</span><span class="vm-sets">4 × ½</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Quads">
         <div class="vm-total">
           <span class="vm-name">Quads</span>
-          <span class="vm-num">13<small>sets a week</small></span>
-          <span class="vm-split">13 main</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 main sets, Day 3 not trained, Day 4 main sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="13 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:65%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>13</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>13</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 direct sets, Day 3 not trained, Day 4 direct sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="13 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:65%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D2</b><span class="vm-ex">Hack Squat or Leg Press</span><span class="vm-sets">4</span></li>
@@ -447,13 +492,16 @@
           <li class="vm-x"><b class="vm-day">D4</b><span class="vm-ex">Leg Extension</span><span class="vm-sets">2</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Hamstrings">
         <div class="vm-total">
           <span class="vm-name">Hamstrings</span>
-          <span class="vm-num">10<small>sets a week</small></span>
-          <span class="vm-split">10 main</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 main sets, Day 3 not trained, Day 4 main sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="10 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:50%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>10</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>10</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 direct sets, Day 3 not trained, Day 4 direct sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="10 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:50%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D2</b><span class="vm-ex">Seated Leg Curl</span><span class="vm-sets">3</span></li>
@@ -461,26 +509,32 @@
           <li class="vm-x"><b class="vm-day">D4</b><span class="vm-ex">Romanian Deadlift</span><span class="vm-sets">3</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Calves">
         <div class="vm-total">
           <span class="vm-name">Calves</span>
-          <span class="vm-num">6<small>sets a week</small></span>
-          <span class="vm-split">6 main</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 main sets, Day 3 not trained, Day 4 main sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="6 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>6</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>6</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 direct sets, Day 3 not trained, Day 4 direct sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="6 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D2</b><span class="vm-ex">Standing Calf Raise</span><span class="vm-sets">3</span></li>
           <li class="vm-x"><b class="vm-day">D4</b><span class="vm-ex">Seated Calf Raise</span><span class="vm-sets">3</span></li>
         </ul>
       </div>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Gluteus medius">
         <div class="vm-total">
           <span class="vm-name">Glute med</span>
-          <span class="vm-num">3<small>sets a week</small></span>
-          <span class="vm-split">3 main</span>
-          <span class="vm-freq">1× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 main sets, Day 3 not trained, Day 4 not trained, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d">4</i><i class="vm-d">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="3 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:15%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>3</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>3</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">1× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 direct sets, Day 3 not trained, Day 4 not trained, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d">4</i><i class="vm-d">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="3 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:15%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D2</b><span class="vm-ex">Machine Hip Abduction</span><span class="vm-sets">3</span></li>
@@ -489,13 +543,16 @@
     </div>
     <div class="vm-group">
       <h3>Core</h3>
-      <div class="vm-row">
+      <div class="vm-row" data-muscle="Abs">
         <div class="vm-total">
           <span class="vm-name">Abs</span>
-          <span class="vm-num">6<small>sets a week</small></span>
-          <span class="vm-split">6 main</span>
-          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 main sets, Day 3 not trained, Day 4 main sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
-          <span class="vm-bar" role="img" aria-label="6 sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span></span>
+          <div class="vm-sum">
+            <span class="vm-term is-direct"><b>6</b><small>direct</small></span><span class="vm-op is-plus">+</span>
+            <span class="vm-term is-indirect is-none"><b>0</b><small>indirect</small></span><span class="vm-op is-eq">=</span>
+            <span class="vm-term is-total"><b>6</b><small>total</small></span>
+          </div>
+          <span class="vm-freq">2× a week <span class="vm-days" role="img" aria-label="Day 1 not trained, Day 2 direct sets, Day 3 not trained, Day 4 direct sets, Day 5 not trained"><i class="vm-d">1</i><i class="vm-d is-full">2</i><i class="vm-d">3</i><i class="vm-d is-full">4</i><i class="vm-d">5</i></span></span>
+          <span class="vm-bar" role="img" aria-label="6 total sets on a 0 to 20 scale, shaded zone 5 to 18"><span class="vm-zone"></span><span class="vm-fill" style="width:30%"></span></span>
         </div>
         <ul class="vm-chips">
           <li class="vm-x"><b class="vm-day">D2</b><span class="vm-ex">Captain’s Chair Knee Raise</span><span class="vm-sets">3</span></li>
@@ -544,7 +601,7 @@
     <p class="panel-blurb">Warm-up and the five lifting days</p>
   <section id="warmup">
     <div class="sec-head">
-      <span class="sec-num">01 — Warm-up</span>
+      <span class="sec-num">02 — Warm-up</span>
       <h2>Six minutes upper, nine minutes lower, and nothing else</h2>
     </div>
     <details class="evidence"><summary>Why the warm-up is this short — the evidence</summary>
@@ -676,7 +733,7 @@
   </section>
   <section id="routine">
     <div class="sec-head">
-      <span class="sec-num">02 — The program</span>
+      <span class="sec-num">03 — The program</span>
       <h2>Five lifting days</h2>
     </div>
     <details class="evidence"><summary>How every session is ordered, and the rest periods</summary>
