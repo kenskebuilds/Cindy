@@ -40,11 +40,14 @@ for old, new in TONED:
     head_bits = head_bits.replace(old, new)
 
 # ---------------------------------------------------------------- tabs ----
-# Group the sections into four tabs. The plan lands first; everything that
-# explains or audits it sits behind the nav.
+# Group the sections into tabs. Weekly volume lands first (how the exercises
+# add up per muscle), then the plan; everything that explains or audits it
+# sits behind the nav.
 TABS = [
-    (u'plan',        u'The Plan',    u'Warm-up, the seven days, weekly volume',
-     [u'warmup', u'routine', u'weekly']),
+    (u'volume',      u'Weekly Volume', u'Weekly sets per muscle, and the exercises that add up to them',
+     [u'weekly']),
+    (u'plan',        u'The Plan',    u'Warm-up and the five lifting days',
+     [u'warmup', u'routine']),
     (u'fourday',     u'4-Day Variant', u'The same 98 sets in four sessions — a volume-matched trial plan that co-exists with the five-day',
      [u'fourday']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
