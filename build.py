@@ -40,12 +40,15 @@ for old, new in TONED:
     head_bits = head_bits.replace(old, new)
 
 # ---------------------------------------------------------------- tabs ----
-# Group the sections into four tabs. The plan lands first; everything that
-# explains or audits it sits behind the nav.
+# Group the sections into tabs. Weekly volume lands first (how the exercises
+# add up per muscle), then the plan; everything that explains or audits it
+# sits behind the nav.
 TABS = [
-    (u'plan',        u'The Plan',    u'Warm-up, the seven days, weekly volume',
-     [u'warmup', u'routine', u'weekly']),
-    (u'fourday',     u'4-Day Variant', u'The same 98 sets in four sessions — a volume-matched trial plan that co-exists with the five-day',
+    (u'volume',      u'Weekly Volume', u'Weekly sets per muscle, and the exercises that add up to them',
+     [u'weekly']),
+    (u'plan',        u'The Plan',    u'Warm-up and the five lifting days',
+     [u'warmup', u'routine']),
+    (u'fourday',     u'4-Day Variant', u'98 sets in four sessions, against the five-day’s 100 — a near volume-matched trial plan that co-exists with the five-day',
      [u'fourday']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
      [u'loading', u'block', u'progress']),
@@ -68,6 +71,157 @@ if missing:
 orphans = [k for k in sections if k not in [i for _, _, _, ids in TABS for i in ids]]
 if orphans:
     raise SystemExit("build: sections not assigned to any tab: %s" % orphans)
+
+# ------------------------------------------------------- drift check ----
+# The Weekly Volume tiles are hand-maintained markup, so check them before
+# anything is written. Three sources must agree, or the build stops:
+#   1. the five-day Weekly totals table (direct and effective per muscle),
+#   2. the tiles in each muscle row (solid = 1 per set, dashed = 1/2 per set)
+#      and the "direct + indirect = total" figures printed beside them, plus the
+#      frequency (days with direct tiles), the D1-D5 strip and the bar beside them,
+#   3. the routine tables (each tile's day, exercise and set count).
+# Tiles use a few shortened exercise names; map them back to the routine's.
+TILE_NAMES = {
+    u'Smith Lunge': u'Smith Machine Lunge',
+    u'Overhead Cable Extension': u'Seated Overhead Cable Extension',
+    u'Cable Hammer Curl': u'Hammer Curl (Cable)',
+    u'Flat DB Bench Press': u'Flat Dumbbell Bench Press',
+}
+
+def _num(text):
+    """'13' -> 13.0, '6½' -> 6.5, '13.5' -> 13.5; None if it is not a number."""
+    t = text.strip()
+    half = t.endswith(u'½')
+    if half:
+        t = t[:-1] or u'0'
+    try:
+        return float(t) + (0.5 if half else 0.0)
+    except ValueError:
+        return None
+
+def _fmt(n):
+    return (u'%g' % n)
+
+def check_volume_drift():
+    errors = []
+    weekly, routine = sections[u'weekly'], sections[u'routine']
+
+    table = {}
+    table_freq = {}
+    for m in re.finditer(r'<tr><td class="c-move">([^<]*)</td><td class="c-load">([^<]*)</td>'
+                         r'<td class="c-load">([^<]*)</td><td class="c-rir">(\d)×</td>', weekly):
+        table[m.group(1)] = (_num(m.group(2)), _num(m.group(3)))
+        table_freq[m.group(1)] = int(m.group(4))
+    if not table:
+        return [u'could not find the Weekly totals table in section "weekly"']
+
+    sessions = {}
+    day = None
+    for m in re.finditer(r'session-day">Day (\d)<|<td class="c-move">(.*?)<small>.*?</small></td>'
+                         r'\s*<td class="c-target">.*?</td>\s*<td class="c-load">(\d+) ×', routine):
+        if m.group(1):
+            day = int(m.group(1))
+            continue
+        key = (day, m.group(2).strip())
+        if key in sessions:
+            errors.append(u'routine: Day %d lists "%s" twice; the tile check cannot tell them apart'
+                          % key)
+        sessions[key] = int(m.group(3))
+    if not sessions:
+        errors.append(u'could not read any exercises from the routine tables')
+    used = set()
+
+    rows = list(re.finditer(r'<div class="vm-row" data-muscle="([^"]*)">(.*?)</ul>', weekly, re.S))
+    if len(rows) != weekly.count(u'<div class="vm-row"'):
+        errors.append(u'a Weekly Volume row is missing its data-muscle attribute or its tile list')
+    seen = set()
+    for row in rows:
+        muscle, html = row.group(1), row.group(2)
+        seen.add(muscle)
+        direct = indirect = 0.0
+        tiles = list(re.finditer(
+            r'<li class="vm-x( is-half)?"><b class="vm-day">D(\d)</b><span class="vm-ex">([^<]*)</span>'
+            r'<span class="vm-sets">([^<]*)</span></li>', html))
+        if len(tiles) != html.count(u'<li'):
+            errors.append(u'%s: a tile is malformed (expected <li class="vm-x"> with day, name and sets)'
+                          % muscle)
+        for t in tiles:
+            half, tday, name, sets_txt = bool(t.group(1)), int(t.group(2)), t.group(3), t.group(4)
+            sm = re.match(u'^(\\d+)( × ½)?$', sets_txt.strip())
+            if not sm or bool(sm.group(2)) != half:
+                errors.append(u'%s: tile "D%d %s" has set count "%s"; expected a whole number%s'
+                              % (muscle, tday, name, sets_txt, u' followed by " × ½" (dashed tile)'
+                                 if half else u' (solid tile)'))
+                continue
+            sets = int(sm.group(1))
+            if half:
+                indirect += sets / 2.0
+            else:
+                direct += sets
+            full = TILE_NAMES.get(name, name)
+            if (tday, full) not in sessions:
+                errors.append(u'%s: tile "D%d %s" has no matching exercise on Day %d of the routine'
+                              % (muscle, tday, name, tday))
+            elif sessions[(tday, full)] != sets:
+                errors.append(u'%s: tile "D%d %s" shows %d sets; the routine has %d'
+                              % (muscle, tday, name, sets, sessions[(tday, full)]))
+            used.add((tday, full))
+
+        if muscle not in table:
+            errors.append(u'%s: has a Weekly Volume row but no line in the Weekly totals table' % muscle)
+            continue
+        t_direct, t_eff = table[muscle]
+        if direct != t_direct:
+            errors.append(u'%s: solid tiles add up to %s direct sets; the table says %s'
+                          % (muscle, _fmt(direct), _fmt(t_direct)))
+        if direct + indirect != t_eff:
+            errors.append(u'%s: tiles add up to %s total (%s direct + %s indirect); the table\'s effective is %s'
+                          % (muscle, _fmt(direct + indirect), _fmt(direct), _fmt(indirect), _fmt(t_eff)))
+        # Frequency rule: "x a week" = number of days with DIRECT (solid) tiles. Days with only
+        # dashed tiles are half credit and do not count. The day strip must show the same days.
+        solid_days = sorted({int(t.group(2)) for t in tiles if not t.group(1)})
+        half_days = sorted({int(t.group(2)) for t in tiles if t.group(1)} - set(solid_days))
+        fm = re.search(u'vm-freq">(\\d)× a week', html)
+        if not fm or int(fm.group(1)) != len(solid_days):
+            errors.append(u'%s: the row says %s× a week; direct sets fall on %d day(s) (%s)'
+                          % (muscle, fm.group(1) if fm else u'(missing)', len(solid_days),
+                             u', '.join(u'D%d' % d for d in solid_days)))
+        if table_freq.get(muscle) != len(solid_days):
+            errors.append(u'%s: the Weekly totals table says %s×; direct sets fall on %d day(s)'
+                          % (muscle, table_freq.get(muscle), len(solid_days)))
+        strip = re.findall(u'<i class="vm-d( is-full| is-half)?">(\\d)</i>', html)
+        strip_full = sorted(int(n) for c, n in strip if c == u' is-full')
+        strip_half = sorted(int(n) for c, n in strip if c == u' is-half')
+        if strip_full != solid_days or strip_half != half_days:
+            errors.append(u'%s: the D1-D5 strip shows direct on %s and indirect-only on %s; the tiles say %s and %s'
+                          % (muscle, strip_full, strip_half, solid_days, half_days))
+        bar = re.search(u'vm-bar" role="img" aria-label="([^"]*?) total sets', html)
+        fills = re.findall(u'vm-fill( is-half)?" style="([^"]*)"', html)
+        want_fills = [(u'', u'width:%g%%' % (direct * 5))]
+        if indirect:
+            want_fills.append((u' is-half', u'left:%g%%;width:%g%%' % (direct * 5, indirect * 5)))
+        if not bar or _num(bar.group(1)) != direct + indirect or fills != want_fills:
+            errors.append(u'%s: the bar (label "%s", fills %s) does not match %s total on the 0-20 scale'
+                          % (muscle, bar.group(1) if bar else u'(missing)', fills, _fmt(direct + indirect)))
+        for cls, want in ((u'is-direct', direct), (u'is-indirect', indirect), (u'is-total', direct + indirect)):
+            fm = re.search(u'vm-term %s[^"]*"><b>([^<]*)</b>' % cls, html)
+            shown = _num(fm.group(1)) if fm else None
+            if shown != want:
+                errors.append(u'%s: the printed %s figure is "%s" but the tiles add up to %s'
+                              % (muscle, cls[3:], fm.group(1) if fm else u'(missing)', _fmt(want)))
+
+    for muscle in table:
+        if muscle not in seen:
+            errors.append(u'%s: is in the Weekly totals table but has no Weekly Volume row' % muscle)
+    for key in sorted(set(sessions) - used):
+        errors.append(u'routine: Day %d "%s" (%d sets) is not credited to any muscle on the Weekly Volume tab'
+                      % (key[0], key[1], sessions[key]))
+    return errors
+
+drift = check_volume_drift()
+if drift:
+    raise SystemExit(u"build: Weekly Volume tab does not match the Weekly totals table or the routine. "
+                     u"Nothing was written.\n  - " + u"\n  - ".join(drift))
 
 nav = [u'  <nav class="tabs" aria-label="Sections">']
 for slug, label, blurb, _ in TABS:
