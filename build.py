@@ -48,7 +48,7 @@ TABS = [
      [u'weekly']),
     (u'plan',        u'The Plan',    u'Warm-up and the five lifting days',
      [u'warmup', u'routine']),
-    (u'fourday',     u'4-Day Variant', u'98 sets in four sessions, against the five-day’s 100 — a near volume-matched trial plan that co-exists with the five-day',
+    (u'fourday',     u'4-Day Variant', u'98 sets in four sessions, against the five-day’s 99 — a near volume-matched trial plan that co-exists with the five-day',
      [u'fourday']),
     (u'progression', u'Progression', u'Loading tiers, the four-week block, when to change what',
      [u'loading', u'block', u'progress']),
